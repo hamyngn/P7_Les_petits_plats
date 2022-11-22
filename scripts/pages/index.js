@@ -1,9 +1,14 @@
+/* global recipeFactory */
 async function getRecipes() {
-    const response = await fetch('./recipes.json');
-    const data = await response.json();
-    return data;
-  }
+  const response = await fetch('./recipes.json');
+  const data = await response.json();
+  return data;
+}
 
+/**
+ * display homepage recipes
+ * @param {Array} recipes
+ */
 async function displayRecipes(recipes) {
   const recipesSection = document.querySelector('.recipes');
 
@@ -13,8 +18,9 @@ async function displayRecipes(recipes) {
     recipesSection.appendChild(recipeDOM);
   });
 }
+
 async function init() {
-  const {recipes} = await getRecipes();
+  const { recipes } = await getRecipes();
   displayRecipes(recipes);
 }
 
@@ -22,8 +28,9 @@ window.onload = () => {
   init();
 };
 
-async function searchByName(){
-  const {recipes} = await getRecipes();
+// display search result
+async function searchByName() {
+  const { recipes } = await getRecipes();
   recipes.forEach((recipe) => {
     const recipeModel = recipeFactory(recipe);
     recipeModel.search();
