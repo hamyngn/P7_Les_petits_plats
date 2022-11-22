@@ -16,13 +16,17 @@
     </header>
     <section class="search">
         <div>
-        <input type="text" class="search-bar" placeholder="Rechercher une recette"> 
-        <span><i class="fa-solid fa-magnifying-glass"></i></span>
+        <input type="search" class="search-bar" placeholder="Rechercher une recette">
+        <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
         </div>
+        <div class="error"></div>
     </section>
-    <section class="recipes">
+    <section class="recipes section--recipes">
 
     </section>
+    <div class="result">
+        <div class="recipes search-result"></div>
+    </div>
     <script src="https://kit.fontawesome.com/703ea3752e.js" crossorigin="anonymous"></script>
     <script src="./scripts/factories/recipe.js"></script>
     <script src="./scripts/pages/index.js"></script>

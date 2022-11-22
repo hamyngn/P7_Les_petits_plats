@@ -47,5 +47,30 @@ function recipeFactory(data) {
         article.appendChild(abstract);
         return article;
       }
-      return { id, name, servings, ingredients, time, description, appliance, ustensils, getRecipeDOM }
+        // search bar
+        let keyword = document.querySelector('.search-bar').value;
+        let reKey = new RegExp(keyword,"gi");
+        const error = document.querySelector('.error');
+        function search() {
+            if(keyword.length < 3) {
+                error.innerHTML = "Please enter at least 3 characters";
+            }
+            const div = document.querySelector('.search-result');
+            if(name.toString().match(reKey)){
+                const recipeDOM = getRecipeDOM();
+                div.appendChild(recipeDOM);
+            }
+            if(!name.toString().match(reKey) && description.toString().match(reKey)) {
+                const recipeDOM = getRecipeDOM();
+                div.appendChild(recipeDOM);
+            }
+            for(let i = 0; i < ingredients.length; i += 1) {
+            if(!name.toString().match(reKey) && !description.toString().match(reKey) && ingredients[i].toString().match(reKey)) {
+                const recipeDOM = getRecipeDOM();
+                div.appendChild(recipeDOM);
+            }
+            }
+        }
+    
+      return { id, name, servings, ingredients, time, description, appliance, ustensils, getRecipeDOM, search }
 }
