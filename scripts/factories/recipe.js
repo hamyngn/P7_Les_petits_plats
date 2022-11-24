@@ -4,10 +4,7 @@ function recipeFactory(data) {
     id, name, servings, ingredients, time, description, appliance, ustensils,
   } = data;
 
-  /*   function setId() {
-    localStorage.setItem('id', id);
-  } */
-
+  // display recipe
   function getRecipeDOM() {
     const article = document.createElement('article');
     const div = document.createElement('div');
@@ -51,30 +48,42 @@ function recipeFactory(data) {
     return article;
   }
 
-  // search bar
+  // principle search
   const keyword = document.querySelector('.search-bar').value;
   const reKey = new RegExp(keyword, 'gi');
-  const error = document.querySelector('.error');
   function search() {
-    if (keyword.length < 3) {
-      error.innerHTML = 'Please enter at least 3 characters';
-    }
+    const tags = [];
     const div = document.querySelector('.search-result');
     if (name.toString().match(reKey)) {
       const recipeDOM = getRecipeDOM();
       div.appendChild(recipeDOM);
+      for (let i = 0; i < ingredients.length; i += 1) {
+        tags.push(ingredients[i].ingredient);
+      }
     }
     if (!name.toString().match(reKey) && description.toString().match(reKey)) {
       const recipeDOM = getRecipeDOM();
       div.appendChild(recipeDOM);
+      for (let i = 0; i < ingredients.length; i += 1) {
+        tags.push(ingredients[i].ingredient);
+      }
     }
     for (let i = 0; i < ingredients.length; i += 1) {
       if (!name.toString().match(reKey)
       && !description.toString().match(reKey)
-      && ingredients[i].toString().match(reKey)) {
+      && ingredients[i].ingredient.toString().match(reKey)) {
         const recipeDOM = getRecipeDOM();
         div.appendChild(recipeDOM);
+        tags.push(ingredients[i].ingredient);
       }
+    }
+    // add tags include keyword to ingredients search
+    const modalIngredients = document.querySelector('.modal-ingredients');
+    for (let k = 0; k < tags.length; k += 1) {
+      const keySuggest = document.createElement('div');
+      keySuggest.setAttribute('class', 'ingredient');
+      keySuggest.innerHTML = tags[k];
+      modalIngredients.appendChild(keySuggest);
     }
   }
 
