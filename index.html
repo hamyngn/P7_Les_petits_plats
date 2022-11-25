@@ -16,26 +16,75 @@
     </header>
     <section class="search">
         <div>
-        <input type="search" class="search-bar" placeholder="Rechercher une recette">
+        <input 
+            type="search" 
+            class="search-bar" 
+            placeholder="Rechercher une recette"
+            onfocus="this.placeholder = ''" 
+            onblur="this.placeholder = 'Rechercher une recette'"
+        >
         <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
         </div>
         <p class="error"></p>
         <div class="search-tags">
-            <div class="ingredients">
-            <input type="search" class="input-ingredients" placeholder="Ingredients" onfocus="this.placeholder = ''">
+            <div class="div--ingredients">
+            <input 
+                type="search" 
+                class="input-ingredients" 
+                placeholder="Ingredients" 
+                onfocus="this.placeholder = ''" 
+                onblur="this.placeholder = 'Ingredients'"
+            >
             <span class="icon--ingredients">
-            <i class="fa-solid fa-chevron-down chevron"></i>
-            <i class="fa-solid fa-chevron-up chevron"></i>
+            <i class="fa-solid fa-chevron-down chevron show-ingredients"></i>
+            <i class="fa-solid fa-chevron-up chevron hide-ingredients"></i>
+            </span>
+            </div>
+            <div class="div--appareils">
+            <input 
+                type="search" 
+                class="input-appareils" 
+                placeholder="Appareils" 
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Appareils'"
+            >
+            <span class="icon--appareils">
+            <i class="fa-solid fa-chevron-down chevron show-appareils"></i>
+            <i class="fa-solid fa-chevron-up chevron hide-appareils"></i>
+            </span>
+            </div>
+            <div class="div--ustensils">
+            <input 
+                type="search" 
+                class="input-ustensils" 
+                placeholder="Ustensils" 
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = 'Ustensils'"
+            >
+            <span class="icon--ustensils">
+            <i class="fa-solid fa-chevron-down chevron show-ustensils"></i>
+            <i class="fa-solid fa-chevron-up chevron hide-ustensils"></i>
             </span>
             </div>
         </div>
+
         <div class="bground">
-            <div class="modal-ingredients">
+            <div class="ingredients-bg">
+                <div class="modal-ingredients">
+                </div>
+            </div>
+            <div class="appareils-bg">
+                <div class="modal-appareils">
+                </div>
+            </div>
+            <div class="ustensils-bg">
+                <div class="modal-ustensils">
+                </div>
             </div>
         </div>
+
     </section>
     <section class="recipes section--recipes">
-
     </section>
     <div class="result">
         <div class="recipes search-result"></div>

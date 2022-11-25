@@ -29,21 +29,22 @@ window.onload = () => {
   init();
 };
 
-// remove same tags in searching by ingredients
-function removeSameTags() {
-  const ingredients = document.querySelectorAll('.ingredient');
-  const ingredientsArr = [];
-  for (let j = 0; j < ingredients.length; j += 1) {
-    ingredientsArr.push(ingredients[j].innerHTML);
+/**
+ * remove same tags in advanced search
+ * @param {String} item
+ */
+function removeSameTags(item) {
+  const items = document.querySelectorAll(`.${item}`);
+  const itemsArr = [];
+  for (let j = 0; j < items.length; j += 1) {
+    itemsArr.push(items[j].innerHTML);
   }
   const uniqueIngredients = [];
-  for (let k = 0; k < ingredientsArr.length; k += 1) {
-    if (!uniqueIngredients.includes(ingredientsArr[k])) {
-      uniqueIngredients.push(ingredientsArr[k]);
-      console.log(uniqueIngredients);
+  for (let k = 0; k < itemsArr.length; k += 1) {
+    if (!uniqueIngredients.includes(itemsArr[k])) {
+      uniqueIngredients.push(itemsArr[k]);
     } else {
-      console.log(ingredients[k]);
-      ingredients[k].remove();
+      items[k].remove();
     }
   }
 }
@@ -83,16 +84,57 @@ async function searchPrincipal() {
     const recipesBlock = document.querySelector('.section--recipes');
     recipesBlock.style.display = 'none'; // hide block that include all recipes
     noResult(); // display message no result
-    removeSameTags(); // remove same tags in searching by ingredients
+    const ingredientsStr = 'ingredients';
+    removeSameTags(ingredientsStr); // remove same tags in searching by ingredients
+    const appareilsStr = 'appareils';
+    removeSameTags(appareilsStr);
+    const ustensilsStr = 'ustensils';
+    removeSameTags(ustensilsStr);
   }
 }
 
 const searchbar = document.querySelector('.search-bar');
 searchbar.addEventListener('input', searchPrincipal);
 
-function showIngredients() {
-  const modalIngredients = document.querySelector('.bground');
-  modalIngredients.style.display = 'block';
+// display Ingredients modal
+const modalBackground = document.querySelector('.bground');
+
+function showAndHideIngredients(string) {
+  const keyword = document.querySelector('.search-bar').value;
+  if (keyword.length >= 3) {
+    const show = document.querySelector(`.show-${string}`);
+    const hide = document.querySelector(`.hide-${string}`);
+    const modal = document.querySelector(`.modal-${string}`);
+    const div = document.querySelector(`.div--${string}`);
+    if (hide.style.display === 'none') {
+      modalBackground.style.display = 'block';
+      modal.style.display = 'grid';
+      div.style.width = '667px';
+      show.style.display = 'none';
+      hide.style.display = 'inline-block';
+    } else {
+      modalBackground.style.display = 'none';
+      modal.style.display = 'none';
+      div.style.width = 'fit-content';
+      hide.style.display = 'none';
+      show.style.display = 'inline-block';
+    }
+  }
 }
 const iconIngredients = document.querySelector('.icon--ingredients');
-iconIngredients.addEventListener('click', showIngredients);
+iconIngredients.addEventListener('click', () => {
+  const ingredient = 'ingredients';
+  showAndHideIngredients(ingredient);
+});
+
+const iconAppareils = document.querySelector('.icon--appareils');
+iconAppareils.addEventListener('click', () => {
+  const appareils = 'appareils';
+  showAndHideIngredients(appareils);
+});
+
+const iconUstensils = document.querySelector('.icon--ustensils');
+iconUstensils.addEventListener('click', () => {
+  const ustensils = 'ustensils';
+  showAndHideIngredients(ustensils);
+});
