@@ -98,8 +98,20 @@ searchbar.addEventListener('input', searchPrincipal);
 
 // display Ingredients modal
 const modalBackground = document.querySelector('.bground');
+const modals = document.querySelectorAll('.modal');
+const fields = document.querySelectorAll('.fields');
+const shows = document.querySelectorAll('.show');
+const hides = document.querySelectorAll('.hide');
 
 function showAndHideIngredients(string) {
+  // hide all advanced search fields
+  for (let i = 0; i < modals.length; i += 1) {
+    modals[i].style.display = 'none';
+    fields[i].style.width = 'fit-content';
+    shows[i].style.display = 'inline-block';
+    hides[i].style.display = 'none';
+  }
+  // take back default value of advanced search field's size
   const keyword = document.querySelector('.search-bar').value;
   if (keyword.length >= 3) {
     const show = document.querySelector(`.show-${string}`);
