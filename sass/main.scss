@@ -59,9 +59,9 @@ input:focus {
         color: #FFFFFF;
         font-size: 18px;
         font-weight: 700;
-        width: 170px;
-        height: 69px;
-        padding-left: 15px;
+        width: 120px;
+        margin-left: 20px;
+        padding: 0;
     }
     i {
         padding-right: 15px;
@@ -69,19 +69,24 @@ input:focus {
     input::placeholder {
         color: #FFFFFF;
     }
+    .div--ingredients, .div--appareils, .div--ustensils {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        width: 170px;
+        height: 69px;
+        margin-right: 20px;
+    }
     .div--ingredients,.input-ingredients {
         background: $primary-color;
-        margin-right: 20px;
         border-radius: 5px;
     }
     .div--appareils, .input-appareils {
         background: $secondary-color;
-        margin-right: 20px;
         border-radius: 5px;
     }
     .div--ustensils, .input-ustensils {
         background: $tertiary-color;
-        margin-right: 20px;
         border-radius: 5px;
     }
     .fa-chevron-up {
@@ -110,7 +115,7 @@ input:focus {
         z-index: 5;
         position: absolute;
         top: 150px;
-        left: 244px;
+        left: 191px;
         width: 667px;
         height: fit-content;
         border-radius: 5px;
@@ -120,7 +125,7 @@ input:focus {
         z-index: 5;
         position: absolute;
         top: 150px;
-        left: 488px;
+        left: 382px;
         width: 667px;
         height: fit-content;
         border-radius: 5px;
@@ -131,6 +136,7 @@ input:focus {
     grid-template-columns: 1fr 1fr 1fr;
     gap: 10px 100px;
     padding: 20px;
+    width: 667px;
 }
 .recipes {
     display: grid;

@@ -56,9 +56,9 @@ input:focus {
   color: #FFFFFF;
   font-size: 18px;
   font-weight: 700;
-  width: 170px;
-  height: 69px;
-  padding-left: 15px;
+  width: 120px;
+  margin-left: 20px;
+  padding: 0;
 }
 .search-tags i {
   padding-right: 15px;
@@ -72,19 +72,24 @@ input:focus {
 .search-tags input::placeholder {
   color: #FFFFFF;
 }
+.search-tags .div--ingredients, .search-tags .div--appareils, .search-tags .div--ustensils {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 170px;
+  height: 69px;
+  margin-right: 20px;
+}
 .search-tags .div--ingredients, .search-tags .input-ingredients {
   background: #3282F7;
-  margin-right: 20px;
   border-radius: 5px;
 }
 .search-tags .div--appareils, .search-tags .input-appareils {
   background: #68D9A4;
-  margin-right: 20px;
   border-radius: 5px;
 }
 .search-tags .div--ustensils, .search-tags .input-ustensils {
   background: #ED6454;
-  margin-right: 20px;
   border-radius: 5px;
 }
 .search-tags .fa-chevron-up {
@@ -115,7 +120,7 @@ input:focus {
   z-index: 5;
   position: absolute;
   top: 150px;
-  left: 244px;
+  left: 191px;
   width: 667px;
   height: -webkit-fit-content;
   height: -moz-fit-content;
@@ -127,7 +132,7 @@ input:focus {
   z-index: 5;
   position: absolute;
   top: 150px;
-  left: 488px;
+  left: 382px;
   width: 667px;
   height: -webkit-fit-content;
   height: -moz-fit-content;
@@ -140,6 +145,7 @@ input:focus {
   grid-template-columns: 1fr 1fr 1fr;
   gap: 10px 100px;
   padding: 20px;
+  width: 667px;
 }
 
 .recipes {

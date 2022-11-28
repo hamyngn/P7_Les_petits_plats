@@ -73,8 +73,8 @@ async function searchPrincipal() {
     error.style.display = 'none';
     searchResult.replaceChildren();
     const { recipes } = await getRecipes();
-    for (let i = 0; i < recipes.length; i += 1) {
-      const recipeModel = recipeFactory(recipes[i]);
+    for (let k = 0; k < recipes.length; k += 1) {
+      const recipeModel = recipeFactory(recipes[k]);
       // function display recipes and tags that include keyword
       recipeModel.search();
     }
@@ -92,6 +92,13 @@ async function searchPrincipal() {
     removeSameTags(appareilsStr);
     const ustensilsStr = 'ustensils';
     removeSameTags(ustensilsStr);
+    const ingredientTags = document.querySelectorAll('.modal-ingredients .ingredients');
+    for (let i = 0; i < ingredientTags.length; i += 1) {
+      ingredientTags[i].addEventListener('click', () => {
+        console.log(ingredientTags[i].innerHTML);
+        advancedSearchRecipes(ingredientTags[i].innerHTML);
+      });
+    }
   }
 }
 
@@ -108,6 +115,7 @@ function hideModal(field) {
 
   modalBackground.style.display = 'none';
   modal.style.display = 'none';
+  // take back default value of advanced search field's size
   div.style.width = 'fit-content';
   hide.style.display = 'none';
   show.style.display = 'inline-block';
@@ -118,7 +126,6 @@ const ingredientsStr = 'ingredients';
 const appareilsStr = 'appareils';
 const ustensilsStr = 'ustensils';
 function showAndHideModal(field) {
-  // take back default value of advanced search field's size
   const keyword = document.querySelector('.search-bar').value;
   if (keyword.length >= 3) {
     const show = document.querySelector(`.show-${field}`);
@@ -160,3 +167,15 @@ const iconUstensils = document.querySelector('.icon--ustensils');
 iconUstensils.addEventListener('click', () => {
   showAndHideModal(ustensilsStr);
 });
+
+async function advancedSearchRecipes(tag) {
+  const { recipes } = await getRecipes();
+  const div = document.querySelector('.search-result');
+  while (div.firstChild) {
+    div.removeChild(div.lastChild);
+  }
+  for (let k = 0; k < recipes.length; k += 1) {
+    const recipeModel = recipeFactory(recipes[k]);
+    recipeModel.advancedSearch(tag);
+  }
+}

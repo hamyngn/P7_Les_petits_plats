@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* gobal advancedSearchRecipes */
 function recipeFactory(data) {
   const {
     id, name, servings, ingredients, time, description, appliance, ustensils,
@@ -25,14 +26,14 @@ function recipeFactory(data) {
     const ingredientsDiv = document.createElement('div');
     ingredientsDiv.setAttribute('class', 'ingredients');
     const ul = document.createElement('ul');
-    for (let i = 0; i < ingredients.length; i += 1) {
+    for (let k = 0; k < ingredients.length; k += 1) {
       const li = document.createElement('li');
-      li.innerHTML = ingredients[i].ingredient;
-      if (Object.prototype.hasOwnProperty.call(ingredients[i], 'quantity')) {
-        li.innerHTML = `${ingredients[i].ingredient}: ${ingredients[i].quantity}`;
+      li.innerHTML = ingredients[k].ingredient;
+      if (Object.prototype.hasOwnProperty.call(ingredients[k], 'quantity')) {
+        li.innerHTML = `${ingredients[k].ingredient}: ${ingredients[k].quantity}`;
       }
-      if (Object.prototype.hasOwnProperty.call(ingredients[i], 'unit')) {
-        li.innerHTML = `${ingredients[i].ingredient}: ${ingredients[i].quantity} ${ingredients[i].unit}`;
+      if (Object.prototype.hasOwnProperty.call(ingredients[k], 'unit')) {
+        li.innerHTML = `${ingredients[k].ingredient}: ${ingredients[k].quantity} ${ingredients[k].unit}`;
       }
       ul.appendChild(li);
     }
@@ -48,6 +49,44 @@ function recipeFactory(data) {
     return article;
   }
 
+  const keyword = document.querySelector('.search-bar').value;
+  const reKey = new RegExp(keyword, 'gi');
+  function advancedSearch(fieldValue) {
+    document.querySelector('.input-ingredients').value = fieldValue;
+    const div = document.querySelector('.search-result');
+    if (name.toString().match(reKey)) {
+      for (let j = 0; j < ingredients.length; j += 1) {
+        if (ingredients[j].ingredient == fieldValue) {
+          const recipeDOM = getRecipeDOM();
+          div.appendChild(recipeDOM);
+          break;
+        }
+      }
+    }
+    if (!name.toString().match(reKey) && description.toString().match(reKey)) {
+      for (let j = 0; j < ingredients.length; j += 1) {
+        if (ingredients[j].ingredient == fieldValue) {
+          const recipeDOM = getRecipeDOM();
+          div.appendChild(recipeDOM);
+          break;
+        }
+      }
+    }
+    for (let i = 0; i < ingredients.length; i += 1) {
+      if (!name.toString().match(reKey)
+      && !description.toString().match(reKey)
+      && ingredients[i].ingredient.toString().match(reKey)
+      ) {
+        for (let j = 0; j < ingredients.length; j += 1) {
+          if (ingredients[j].ingredient == fieldValue) {
+            const recipeDOM = getRecipeDOM();
+            div.appendChild(recipeDOM);
+            break;
+          }
+        }
+      }
+    }
+  }
   /**
    * add tags include keyword to advance search
    * @param {Array} tags
@@ -64,8 +103,6 @@ function recipeFactory(data) {
   }
 
   // principle search
-  const keyword = document.querySelector('.search-bar').value;
-  const reKey = new RegExp(keyword, 'gi');
   function search() {
     const ingredientTags = [];
     const applianceTags = [];
@@ -115,6 +152,16 @@ function recipeFactory(data) {
   }
 
   return {
-    id, name, servings, ingredients, time, description, appliance, ustensils, getRecipeDOM, search,
+    id,
+    name,
+    servings,
+    ingredients,
+    time,
+    description,
+    appliance,
+    ustensils,
+    getRecipeDOM,
+    search,
+    advancedSearch,
   };
 }
