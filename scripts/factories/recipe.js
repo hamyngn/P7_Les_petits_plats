@@ -52,10 +52,10 @@ function recipeFactory(data) {
   const keyword = document.querySelector('.search-bar').value;
   const reKey = new RegExp(keyword, 'gi');
   /**
-   * advanced search by tag
+   * advanced search by ingredient tag
    * @param {String} fieldValue
    */
-  function advancedSearch(fieldValue) {
+  function advancedSearchIngredient(fieldValue) {
     /*  document.querySelector('.input-ingredients').value = fieldValue; */
     const div = document.querySelector('.search-result');
     if (name.toString().match(reKey)) {
@@ -83,6 +83,77 @@ function recipeFactory(data) {
       ) {
         for (let j = 0; j < ingredients.length; j += 1) {
           if (ingredients[j].ingredient === fieldValue) {
+            const recipeDOM = getRecipeDOM();
+            div.appendChild(recipeDOM);
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * advanced search by appareil tag
+   * @param {String} fieldValue
+   */
+  function advancedSearchAppareil(fieldValue) {
+    const div = document.querySelector('.search-result');
+    if (name.toString().match(reKey)) {
+      if (appliance === fieldValue) {
+        const recipeDOM = getRecipeDOM();
+        div.appendChild(recipeDOM);
+      }
+    }
+    if (!name.toString().match(reKey) && description.toString().match(reKey)) {
+      if (appliance === fieldValue) {
+        const recipeDOM = getRecipeDOM();
+        div.appendChild(recipeDOM);
+      }
+    }
+    for (let i = 0; i < ingredients.length; i += 1) {
+      if (!name.toString().match(reKey)
+      && !description.toString().match(reKey)
+      && ingredients[i].ingredient.toString().match(reKey)
+      ) {
+        if (appliance === fieldValue) {
+          const recipeDOM = getRecipeDOM();
+          div.appendChild(recipeDOM);
+        }
+      }
+    }
+  }
+
+  /**
+   * advanced search by ustensil tag
+   * @param {String} fieldValue
+   */
+  function advancedSearchUstensil(fieldValue) {
+    const div = document.querySelector('.search-result');
+    if (name.toString().match(reKey)) {
+      for (let j = 0; j < ustensils.length; j += 1) {
+        if (ustensils[j] === fieldValue) {
+          const recipeDOM = getRecipeDOM();
+          div.appendChild(recipeDOM);
+          break;
+        }
+      }
+    }
+    if (!name.toString().match(reKey) && description.toString().match(reKey)) {
+      for (let j = 0; j < ustensils.length; j += 1) {
+        if (ustensils[j] === fieldValue) {
+          const recipeDOM = getRecipeDOM();
+          div.appendChild(recipeDOM);
+          break;
+        }
+      }
+    }
+    for (let i = 0; i < ingredients.length; i += 1) {
+      if (!name.toString().match(reKey)
+      && !description.toString().match(reKey)
+      && ingredients[i].ingredient.toString().match(reKey)
+      ) {
+        for (let j = 0; j < ustensils.length; j += 1) {
+          if (ustensils[j] === fieldValue) {
             const recipeDOM = getRecipeDOM();
             div.appendChild(recipeDOM);
             break;
@@ -167,6 +238,8 @@ function recipeFactory(data) {
     ustensils,
     getRecipeDOM,
     search,
-    advancedSearch,
+    advancedSearchIngredient,
+    advancedSearchAppareil,
+    advancedSearchUstensil,
   };
 }

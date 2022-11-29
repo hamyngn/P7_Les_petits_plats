@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-return-assign */
 /* eslint-disable no-console */
 /* global recipeFactory */
 async function getRecipes() {
@@ -37,7 +39,7 @@ function removeSameTags(item) {
   const items = document.querySelectorAll(`.${item}`);
   const itemsArr = [];
   for (let j = 0; j < items.length; j += 1) {
-    itemsArr.push(items[j].innerHTML);
+    itemsArr.push(items[j].innerHTML.toLowerCase());
   }
   const uniqueIngredients = [];
   for (let k = 0; k < itemsArr.length; k += 1) {
@@ -49,42 +51,140 @@ function removeSameTags(item) {
   }
 }
 
+function displayTags() {
+  const ingredientsStr = 'ingredients';
+  removeSameTags(ingredientsStr); // remove same tags in searching by ingredients
+  const appareilsStr = 'appareils';
+  removeSameTags(appareilsStr);
+  const ustensilsStr = 'ustensils';
+  removeSameTags(ustensilsStr);
+}
+
 // display message no result
 const searchResult = document.querySelector('.search-result');
 const result = document.querySelector('.result');
 function noResult() {
   if (!searchResult.hasChildNodes()) {
     const p = document.createElement('p');
+    p.style.width = '100vw';
     p.textContent = 'Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc.';
-    result.appendChild(p);
+    searchResult.appendChild(p);
   }
 }
 
-//
 /**
- * search by tag
+ * display recipes when search by Ingredient tag
  * @param {String} tag
  */
-async function advancedSearchRecipes(tag) {
+async function searchByIngredientTag(tag) {
   const { recipes } = await getRecipes();
   const div = document.querySelector('.search-result');
   div.replaceChildren();
   for (let k = 0; k < recipes.length; k += 1) {
     const recipeModel = recipeFactory(recipes[k]);
-    recipeModel.advancedSearch(tag);
+    recipeModel.advancedSearchIngredient(tag);
+  }
+}
+
+/* add onlick event to ingredient tags
+    and remove tags that do not match ingredient input keyword */
+function searchByIngredientTags() {
+  const tags = document.querySelector('.tags');
+  const ingredientTags = document.querySelectorAll('.modal-ingredients .ingredients');
+  // add onlick event to ingredient tags
+  for (let i = 0; i < ingredientTags.length; i += 1) {
+    ingredientTags[i].addEventListener('click', () => {
+      searchByIngredientTag(ingredientTags[i].innerHTML);
+      ingredientTags[i].setAttribute('clicked', 'clicked');
+      const div = document.createElement('div');
+      div.setAttribute('class', 'tag');
+      div.innerHTML = ingredientTags[i].innerHTML;
+      tags.appendChild(div);
+    });
+  }
+  // remove tags that do not match ingredient input keyword
+  const inputIngredients = document.querySelector('.input-ingredients');
+  inputIngredients.addEventListener('input', () => {
+    const inputKeyword = inputIngredients.value;
+    const exInput = new RegExp(inputKeyword, 'gi');
+    ingredientTags.forEach((ingredientTag) => ingredientTag.style.display = 'block');
+    if (inputKeyword !== '') {
+      for (let i = 0; i < ingredientTags.length; i += 1) {
+        if (!ingredientTags[i].innerHTML.match(exInput)) {
+          ingredientTags[i].style.display = 'none';
+        }
+      }
+    }
+  });
+}
+
+/**
+ * search by Appareil tag
+ * @param {String} tag
+ */
+async function searchByAppareilTag(tag) {
+  const { recipes } = await getRecipes();
+  const div = document.querySelector('.search-result');
+  div.replaceChildren();
+  for (let k = 0; k < recipes.length; k += 1) {
+    const recipeModel = recipeFactory(recipes[k]);
+    recipeModel.advancedSearchAppareil(tag);
+  }
+}
+
+// add onclick event to appareil tags
+function searchByAppareilTags() {
+  const appareilsTags = document.querySelectorAll('.modal-appareils .appareils');
+  for (let j = 0; j < appareilsTags.length; j += 1) {
+    appareilsTags[j].addEventListener('click', () => {
+      console.log(appareilsTags[j].innerHTML);
+      searchByAppareilTag(appareilsTags[j].innerHTML);
+    });
+  }
+
+  const inputAppareils = document.querySelector('.input-appareils');
+  inputAppareils.addEventListener('input', () => {
+    const inputKeyword = inputAppareils.value;
+    const exInput = new RegExp(inputKeyword, 'gi');
+    appareilsTags.forEach((tag) => tag.style.display = 'block');
+    if (inputKeyword !== '') {
+      for (let i = 0; i < appareilsTags.length; i += 1) {
+        if (!appareilsTags[i].innerHTML.match(exInput)) {
+          appareilsTags[i].style.display = 'none';
+        }
+      }
+    }
+  });
+}
+
+/**
+ * display recipes when search by ustensil tag
+ * @param {String} tag
+ */
+async function searchByUstensilTag(tag) {
+  const { recipes } = await getRecipes();
+  const div = document.querySelector('.search-result');
+  div.replaceChildren();
+  for (let k = 0; k < recipes.length; k += 1) {
+    const recipeModel = recipeFactory(recipes[k]);
+    recipeModel.advancedSearchUstensil(tag);
+  }
+}
+
+// add onlick event to ustensil tags
+function searchByUstensilTags() {
+  const ustensilsTags = document.querySelectorAll('.modal-ustensils .ustensils');
+  for (let i = 0; i < ustensilsTags.length; i += 1) {
+    ustensilsTags[i].addEventListener('click', () => {
+      searchByUstensilTag(ustensilsTags[i].innerHTML);
+    });
   }
 }
 
 // display search result
 async function searchPrincipal() {
   const keyword = document.querySelector('.search-bar').value;
-  const error = document.querySelector('.error');
-
-  if (keyword.length < 3) {
-    error.innerHTML = 'Please enter at least 3 characters';
-  }
   if (keyword.length >= 3) {
-    error.style.display = 'none';
     searchResult.replaceChildren();
     const { recipes } = await getRecipes();
     for (let k = 0; k < recipes.length; k += 1) {
@@ -100,25 +200,18 @@ async function searchPrincipal() {
     const recipesBlock = document.querySelector('.section--recipes');
     recipesBlock.style.display = 'none'; // hide block that include all recipes
     noResult(); // display message no result
-    const ingredientsStr = 'ingredients';
-    removeSameTags(ingredientsStr); // remove same tags in searching by ingredients
-    const appareilsStr = 'appareils';
-    removeSameTags(appareilsStr);
-    const ustensilsStr = 'ustensils';
-    removeSameTags(ustensilsStr);
-    const ingredientTags = document.querySelectorAll('.modal-ingredients .ingredients');
-    for (let i = 0; i < ingredientTags.length; i += 1) {
-      ingredientTags[i].addEventListener('click', () => {
-        console.log(ingredientTags[i].innerHTML);
-        advancedSearchRecipes(ingredientTags[i].innerHTML);
-      });
-    }
+    displayTags();
+    searchByIngredientTags();
+    searchByAppareilTags();
+    searchByUstensilTags();
   }
 }
 
 const modalIngredients = document.querySelector('.modal-ingredients');
 const modalAppareils = document.querySelector('.modal-appareils');
 const modalUstensils = document.querySelector('.modal-ustensils');
+
+// clear old search result tags before diplay new search result tags
 function clearTags() {
   modalIngredients.replaceChildren();
   modalAppareils.replaceChildren();
