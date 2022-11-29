@@ -51,12 +51,16 @@ function recipeFactory(data) {
 
   const keyword = document.querySelector('.search-bar').value;
   const reKey = new RegExp(keyword, 'gi');
+  /**
+   * advanced search by tag
+   * @param {String} fieldValue
+   */
   function advancedSearch(fieldValue) {
-    document.querySelector('.input-ingredients').value = fieldValue;
+    /*  document.querySelector('.input-ingredients').value = fieldValue; */
     const div = document.querySelector('.search-result');
     if (name.toString().match(reKey)) {
       for (let j = 0; j < ingredients.length; j += 1) {
-        if (ingredients[j].ingredient == fieldValue) {
+        if (ingredients[j].ingredient === fieldValue) {
           const recipeDOM = getRecipeDOM();
           div.appendChild(recipeDOM);
           break;
@@ -65,7 +69,7 @@ function recipeFactory(data) {
     }
     if (!name.toString().match(reKey) && description.toString().match(reKey)) {
       for (let j = 0; j < ingredients.length; j += 1) {
-        if (ingredients[j].ingredient == fieldValue) {
+        if (ingredients[j].ingredient === fieldValue) {
           const recipeDOM = getRecipeDOM();
           div.appendChild(recipeDOM);
           break;
@@ -78,7 +82,7 @@ function recipeFactory(data) {
       && ingredients[i].ingredient.toString().match(reKey)
       ) {
         for (let j = 0; j < ingredients.length; j += 1) {
-          if (ingredients[j].ingredient == fieldValue) {
+          if (ingredients[j].ingredient === fieldValue) {
             const recipeDOM = getRecipeDOM();
             div.appendChild(recipeDOM);
             break;
@@ -87,6 +91,7 @@ function recipeFactory(data) {
       }
     }
   }
+
   /**
    * add tags include keyword to advance search
    * @param {Array} tags

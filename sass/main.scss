@@ -2,6 +2,10 @@ $primary-color: #3282F7;
 $secondary-color: #68D9A4;
 $tertiary-color: #ED6454;
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Lato', sans-serif;
     margin-left: 100px;
@@ -59,7 +63,7 @@ input:focus {
         color: #FFFFFF;
         font-size: 18px;
         font-weight: 700;
-        width: 120px;
+        width: 100%;
         margin-left: 20px;
         padding: 0;
     }
@@ -73,6 +77,7 @@ input:focus {
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
+        justify-content: space-between;
         width: 170px;
         height: 69px;
         margin-right: 20px;
@@ -115,7 +120,7 @@ input:focus {
         z-index: 5;
         position: absolute;
         top: 150px;
-        left: 191px;
+        left: 190px;
         width: 667px;
         height: fit-content;
         border-radius: 5px;
@@ -125,7 +130,7 @@ input:focus {
         z-index: 5;
         position: absolute;
         top: 150px;
-        left: 382px;
+        left: 380px;
         width: 667px;
         height: fit-content;
         border-radius: 5px;

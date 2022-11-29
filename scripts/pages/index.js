@@ -60,8 +60,22 @@ function noResult() {
   }
 }
 
-// display search result
+//
+/**
+ * search by tag
+ * @param {String} tag
+ */
+async function advancedSearchRecipes(tag) {
+  const { recipes } = await getRecipes();
+  const div = document.querySelector('.search-result');
+  div.replaceChildren();
+  for (let k = 0; k < recipes.length; k += 1) {
+    const recipeModel = recipeFactory(recipes[k]);
+    recipeModel.advancedSearch(tag);
+  }
+}
 
+// display search result
 async function searchPrincipal() {
   const keyword = document.querySelector('.search-bar').value;
   const error = document.querySelector('.error');
@@ -102,8 +116,20 @@ async function searchPrincipal() {
   }
 }
 
+const modalIngredients = document.querySelector('.modal-ingredients');
+const modalAppareils = document.querySelector('.modal-appareils');
+const modalUstensils = document.querySelector('.modal-ustensils');
+function clearTags() {
+  modalIngredients.replaceChildren();
+  modalAppareils.replaceChildren();
+  modalUstensils.replaceChildren();
+}
+
 const searchbar = document.querySelector('.search-bar');
-searchbar.addEventListener('input', searchPrincipal);
+searchbar.addEventListener('input', () => {
+  clearTags();
+  searchPrincipal();
+});
 
 // hide Modal
 const modalBackground = document.querySelector('.bground');
@@ -112,11 +138,13 @@ function hideModal(field) {
   const hide = document.querySelector(`.hide-${field}`);
   const modal = document.querySelector(`.modal-${field}`);
   const div = document.querySelector(`.div--${field}`);
-
+  const input = document.querySelector(`.input-${field}`);
+  const inputKey = field.charAt(0).toUpperCase() + field.slice(1);
+  input.setAttribute('placeholder', `${inputKey}`);
   modalBackground.style.display = 'none';
   modal.style.display = 'none';
   // take back default value of advanced search field's size
-  div.style.width = 'fit-content';
+  div.style.width = '170px';
   hide.style.display = 'none';
   show.style.display = 'inline-block';
 }
@@ -132,7 +160,7 @@ function showAndHideModal(field) {
     const hide = document.querySelector(`.hide-${field}`);
     const modal = document.querySelector(`.modal-${field}`);
     const div = document.querySelector(`.div--${field}`);
-
+    const input = document.querySelector(`.input-${field}`);
     if (hide.style.display === 'none') {
       hideModal(ingredientsStr);
       hideModal(appareilsStr);
@@ -142,6 +170,8 @@ function showAndHideModal(field) {
       div.style.width = '667px';
       show.style.display = 'none';
       hide.style.display = 'inline-block';
+      const inputKey = field.slice(0, -1);
+      input.setAttribute('placeholder', `Rechercher un ${inputKey}`);
     } else {
       hideModal(field);
     }
@@ -167,15 +197,3 @@ const iconUstensils = document.querySelector('.icon--ustensils');
 iconUstensils.addEventListener('click', () => {
   showAndHideModal(ustensilsStr);
 });
-
-async function advancedSearchRecipes(tag) {
-  const { recipes } = await getRecipes();
-  const div = document.querySelector('.search-result');
-  while (div.firstChild) {
-    div.removeChild(div.lastChild);
-  }
-  for (let k = 0; k < recipes.length; k += 1) {
-    const recipeModel = recipeFactory(recipes[k]);
-    recipeModel.advancedSearch(tag);
-  }
-}
