@@ -41,10 +41,10 @@ function recipeFactory(data) {
       ul.appendChild(li);
     }
     ingredientsDiv.appendChild(ul);
+    intro.appendChild(ingredientsDiv);
     const paragraphe = document.createElement('p');
     paragraphe.setAttribute('class', 'description');
     paragraphe.innerHTML = description;
-    intro.appendChild(ingredientsDiv);
     intro.appendChild(paragraphe);
     abstract.appendChild(intro);
     article.appendChild(div);
@@ -221,6 +221,7 @@ function recipeFactory(data) {
         for (let j = 0; j < ustensils.length; j += 1) {
           ustensilTags.push(ustensils[j]);
         }
+        break;
       }
     }
     const ingredientsField = 'ingredients';

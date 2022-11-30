@@ -32,6 +32,7 @@ input:focus {
     outline: none;
 }
 
+// parincile search bar div
 .search-principal {
     display: flex;
     align-items: center;
@@ -54,6 +55,7 @@ input:focus {
     }
 }
 
+// advanced search div
 .search-tags {
     position: relative;
     display: flex;
@@ -103,6 +105,7 @@ input:focus {
     }
 }
 
+// search result tags modal background
 .bground {
     display: none;
     font-size: 18px;
@@ -111,7 +114,7 @@ input:focus {
         background: $primary-color;
         z-index: 5;
         position: absolute;
-        margin-top: -5px;
+        margin-top: -7px;
         width: 667px;
         height: fit-content;
         border-radius: 5px;
@@ -120,7 +123,7 @@ input:focus {
         background: $secondary-color;
         z-index: 5;
         position: absolute;
-        margin-top: -5px;
+        margin-top: -7px;
         left: 290px;
         width: 667px;
         height: fit-content;
@@ -130,7 +133,7 @@ input:focus {
         background: $tertiary-color;
         z-index: 5;
         position: absolute;
-        margin-top: -5px;
+        margin-top: -7px;
         left: 480px;
         width: 667px;
         height: fit-content;
@@ -138,6 +141,7 @@ input:focus {
     }
 }
 
+// search result tags modal
 .modal-ingredients, .modal-appareils, .modal-ustensils {
     display: none;
     grid-template-columns: 1fr 1fr 1fr;
@@ -146,6 +150,25 @@ input:focus {
     width: 667px;
 }
 
+.modal-ingredients {
+    .ingredients {
+        cursor: pointer;
+    }
+}
+
+.modal-appareils {
+    .appareils {
+        cursor: pointer;
+    }
+}
+
+.modal-ustensils {
+    .ustensils {
+        cursor: pointer;
+    }
+}
+
+// recipes section
 .recipes {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -159,10 +182,15 @@ input:focus {
     }
 }
 
+// recipes abstract
 .abstract {
     background: #E7E7E7;
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
     padding: 20px;
+    margin-top: -1px;
+    z-index: 1;
+
+    //name and time
     .head {
         display: flex;
         align-items: center;
@@ -174,45 +202,47 @@ input:focus {
         font-size: 18px;
         line-height: 22px;
     }
+
+    // ingredients and description element
     .intro {
         display: flex;
         height: 109px;
     }
-    .div--ingredients {
+    .ingredients {
         flex: 1;
-        font-weight: 700;
         font-size: 12px;
         line-height: 14px;
+        font-weight: 700;
     }
     .description {
         flex: 1;
         margin: 0;
         font-size: 12px;
-        line-height: 100%;
+        line-height: 12px;
         text-overflow: ellipsis;
         overflow: hidden;
     }
 }
 
+// ingredients list
 ul {
     margin: 0;
     padding: 0;
     list-style-type: none;  
 }
 
+// search result recipes
 .result {
     display: none;
     position: absolute;
-    top: 380px;
+    top: 400px;
     background-color: white;
     width: 100%;
     height: 100vh;
-    .image {
-        width: 100%;
-    }
     z-index: 1;
 }
 
+// tags display
 .tags {
     display: none;
     margin-top: 25px;
@@ -226,5 +256,6 @@ ul {
     }
     span {
         margin-left: 13px;
+        cursor: pointer;
     }
 }

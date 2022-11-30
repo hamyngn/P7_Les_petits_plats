@@ -261,10 +261,6 @@ async function searchPrincipal() {
       // function display recipes and tags that include keyword
       recipeModel.search();
     }
-    /*   recipes.forEach((recipe) => {
-    const recipeModel = recipeFactory(recipe);
-    recipeModel.search();
-  }); */
     result.style.display = 'block'; // display searching result
     const recipesBlock = document.querySelector('.section--recipes');
     recipesBlock.style.display = 'none'; // hide block that include all recipes
