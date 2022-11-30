@@ -2,6 +2,11 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable no-console */
 /* global recipeFactory */
+
+/**
+ *
+ * @returns recipes objects
+ */
 async function getRecipes() {
   const response = await fetch('./recipes.json');
   const data = await response.json();
@@ -9,7 +14,7 @@ async function getRecipes() {
 }
 
 /**
- * display homepage recipes
+ * create recipes elements
  * @param {Array} recipes
  */
 async function displayRecipes(recipes) {
@@ -22,6 +27,9 @@ async function displayRecipes(recipes) {
   });
 }
 
+/**
+ * display all recipes
+ */
 async function init() {
   const { recipes } = await getRecipes();
   displayRecipes(recipes);
@@ -51,6 +59,9 @@ function removeSameTags(item) {
   }
 }
 
+/**
+ * display updated ingredient, appareil, ustensil tags after removing cached
+ */
 function displayTags() {
   const ingredientsStr = 'ingredients';
   removeSameTags(ingredientsStr); // remove same tags in searching by ingredients
@@ -60,9 +71,12 @@ function displayTags() {
   removeSameTags(ustensilsStr);
 }
 
-// display message no result
 const searchResult = document.querySelector('.search-result');
 const result = document.querySelector('.result');
+
+/**
+ * display message no result
+ */
 function noResult() {
   if (!searchResult.hasChildNodes()) {
     const p = document.createElement('p');
@@ -86,8 +100,9 @@ async function searchByIngredientTag(tag) {
   }
 }
 
-/* add onlick event to ingredient tags
-    and remove tags that do not match ingredient input keyword */
+/**
+ * add onlick event to ingredient tags and remove tags that do not match ingredient input keyword
+ */
 function searchByIngredientTags() {
   const tags = document.querySelector('.tags');
   const ingredientTags = document.querySelectorAll('.modal-ingredients .ingredients');
@@ -99,7 +114,14 @@ function searchByIngredientTags() {
       const div = document.createElement('div');
       div.setAttribute('class', 'tag');
       div.innerHTML = ingredientTags[i].innerHTML;
+      const span = document.createElement('span');
+      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
+      span.addEventListener('click', () => {
+        div.style.display = 'none';
+      });
+      div.appendChild(span);
       tags.appendChild(div);
+      tags.style.display = 'flex';
     });
   }
   // remove tags that do not match ingredient input keyword
@@ -132,16 +154,31 @@ async function searchByAppareilTag(tag) {
   }
 }
 
-// add onclick event to appareil tags
+/**
+ * add onlick event to appareil tags and remove tags that do not match appareil input keyword
+ */
 function searchByAppareilTags() {
+  const tags = document.querySelector('.tags');
   const appareilsTags = document.querySelectorAll('.modal-appareils .appareils');
+  // add onlick event to appareil tags
   for (let j = 0; j < appareilsTags.length; j += 1) {
     appareilsTags[j].addEventListener('click', () => {
-      console.log(appareilsTags[j].innerHTML);
       searchByAppareilTag(appareilsTags[j].innerHTML);
+      appareilsTags[j].setAttribute('clicked', 'clicked');
+      const div = document.createElement('div');
+      div.setAttribute('class', 'tag');
+      div.innerHTML = appareilsTags[j].innerHTML;
+      const span = document.createElement('span');
+      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
+      span.addEventListener('click', () => {
+        div.style.display = 'none';
+      });
+      div.appendChild(span);
+      tags.appendChild(div);
+      tags.style.display = 'flex';
     });
   }
-
+  // remove tags that do not match appareil input keyword
   const inputAppareils = document.querySelector('.input-appareils');
   inputAppareils.addEventListener('input', () => {
     const inputKeyword = inputAppareils.value;
@@ -171,17 +208,49 @@ async function searchByUstensilTag(tag) {
   }
 }
 
-// add onlick event to ustensil tags
+/**
+ * add onlick event to ustensil tags and remove tags that do not match ustensil input keyword
+ */
 function searchByUstensilTags() {
   const ustensilsTags = document.querySelectorAll('.modal-ustensils .ustensils');
+  const tags = document.querySelector('.tags');
+  // add onlick event to ustensil tags
   for (let i = 0; i < ustensilsTags.length; i += 1) {
     ustensilsTags[i].addEventListener('click', () => {
       searchByUstensilTag(ustensilsTags[i].innerHTML);
+      ustensilsTags[i].setAttribute('clicked', 'clicked');
+      const div = document.createElement('div');
+      div.setAttribute('class', 'tag');
+      div.innerHTML = ustensilsTags[i].innerHTML;
+      const span = document.createElement('span');
+      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
+      span.addEventListener('click', () => {
+        div.style.display = 'none';
+      });
+      div.appendChild(span);
+      tags.appendChild(div);
+      tags.style.display = 'flex';
     });
   }
+  // remove tags that do not match ustensil input keyword
+  const inputUstensils = document.querySelector('.input-ustensils');
+  inputUstensils.addEventListener('input', () => {
+    const inputKeyword = inputUstensils.value;
+    const exInput = new RegExp(inputKeyword, 'gi');
+    ustensilsTags.forEach((tag) => tag.style.display = 'block');
+    if (inputKeyword !== '') {
+      for (let i = 0; i < ustensilsTags.length; i += 1) {
+        if (!ustensilsTags[i].innerHTML.match(exInput)) {
+          ustensilsTags[i].style.display = 'none';
+        }
+      }
+    }
+  });
 }
 
-// display search result
+/**
+ * display search result
+ */
 async function searchPrincipal() {
   const keyword = document.querySelector('.search-bar').value;
   if (keyword.length >= 3) {
@@ -211,7 +280,9 @@ const modalIngredients = document.querySelector('.modal-ingredients');
 const modalAppareils = document.querySelector('.modal-appareils');
 const modalUstensils = document.querySelector('.modal-ustensils');
 
-// clear old search result tags before diplay new search result tags
+/**
+ * clear old tags before diplay new search result tags
+ */
 function clearTags() {
   modalIngredients.replaceChildren();
   modalAppareils.replaceChildren();
@@ -224,8 +295,11 @@ searchbar.addEventListener('input', () => {
   searchPrincipal();
 });
 
-// hide Modal
 const modalBackground = document.querySelector('.bground');
+/**
+ * hide tags modal
+ * @param {String} field
+ */
 function hideModal(field) {
   const show = document.querySelector(`.show-${field}`);
   const hide = document.querySelector(`.hide-${field}`);
@@ -242,10 +316,13 @@ function hideModal(field) {
   show.style.display = 'inline-block';
 }
 
-// display Ingredients modal
 const ingredientsStr = 'ingredients';
 const appareilsStr = 'appareils';
 const ustensilsStr = 'ustensils';
+/**
+ * display tags modal
+ * @param {String} field
+ */
 function showAndHideModal(field) {
   const keyword = document.querySelector('.search-bar').value;
   if (keyword.length >= 3) {
@@ -273,14 +350,12 @@ function showAndHideModal(field) {
 
 // show and hide ingredients tags
 const iconIngredients = document.querySelector('.icon--ingredients');
-
 iconIngredients.addEventListener('click', () => {
   showAndHideModal(ingredientsStr);
 });
 
 // show and hide appareils tags
 const iconAppareils = document.querySelector('.icon--appareils');
-
 iconAppareils.addEventListener('click', () => {
   showAndHideModal(appareilsStr);
 });

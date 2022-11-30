@@ -5,7 +5,10 @@ function recipeFactory(data) {
     id, name, servings, ingredients, time, description, appliance, ustensils,
   } = data;
 
-  // display recipe
+  /**
+   * create recipe
+   * @returns an article
+   */
   function getRecipeDOM() {
     const article = document.createElement('article');
     const div = document.createElement('div');
@@ -51,6 +54,7 @@ function recipeFactory(data) {
 
   const keyword = document.querySelector('.search-bar').value;
   const reKey = new RegExp(keyword, 'gi');
+
   /**
    * advanced search by ingredient tag
    * @param {String} fieldValue
@@ -164,7 +168,7 @@ function recipeFactory(data) {
   }
 
   /**
-   * add tags include keyword to advance search
+   * add tags include keyword to advanced search
    * @param {Array} tags
    * @param {String} field
    */

@@ -32,8 +32,10 @@ input:focus {
     outline: none;
 }
 
-.search {
-    position: relative;
+.search-principal {
+    display: flex;
+    align-items: center;
+    background: #E7E7E7;
     .search-bar {
         width: 100%;
         height: 69px;
@@ -44,10 +46,8 @@ input:focus {
         padding-left: 24px;
     }
     .search-icon {
-        position: absolute;
-        top: 17.5px;
-        right: 20px;
         font-size: 32px;
+        margin-right: 20px;
     }
     .error {
         color: red;
@@ -55,6 +55,7 @@ input:focus {
 }
 
 .search-tags {
+    position: relative;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -110,7 +111,7 @@ input:focus {
         background: $primary-color;
         z-index: 5;
         position: absolute;
-        top: 178px;
+        margin-top: -5px;
         width: 667px;
         height: fit-content;
         border-radius: 5px;
@@ -119,8 +120,8 @@ input:focus {
         background: $secondary-color;
         z-index: 5;
         position: absolute;
-        top: 150px;
-        left: 190px;
+        margin-top: -5px;
+        left: 290px;
         width: 667px;
         height: fit-content;
         border-radius: 5px;
@@ -129,13 +130,14 @@ input:focus {
         background: $tertiary-color;
         z-index: 5;
         position: absolute;
-        top: 150px;
-        left: 380px;
+        margin-top: -5px;
+        left: 480px;
         width: 667px;
         height: fit-content;
         border-radius: 5px;
     }
 }
+
 .modal-ingredients, .modal-appareils, .modal-ustensils {
     display: none;
     grid-template-columns: 1fr 1fr 1fr;
@@ -143,6 +145,7 @@ input:focus {
     padding: 20px;
     width: 667px;
 }
+
 .recipes {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -200,7 +203,7 @@ ul {
 .result {
     display: none;
     position: absolute;
-    top: 500px;
+    top: 380px;
     background-color: white;
     width: 100%;
     height: 100vh;
@@ -211,7 +214,7 @@ ul {
 }
 
 .tags {
-    display: flex;
+    display: none;
     margin-top: 25px;
     .tag {
         background-color: $primary-color;
@@ -219,5 +222,9 @@ ul {
         height: 37px;
         color: #FFFFFF;
         padding: 10px 20px;
+        margin-right: 20px;
+    }
+    span {
+        margin-left: 13px;
     }
 }
