@@ -86,6 +86,50 @@ function noResult() {
   }
 }
 
+const modalBackground = document.querySelector('.bground');
+/**
+ * open tags modal
+ * @param {String} field
+ */
+function showModal(field) {
+  const keyword = document.querySelector('.search-bar').value;
+  if (keyword.length >= 3) {
+    const show = document.querySelector(`.show-${field}`);
+    const hide = document.querySelector(`.hide-${field}`);
+    const modal = document.querySelector(`.modal-${field}`);
+    const div = document.querySelector(`.div--${field}`);
+    modalBackground.style.display = 'block';
+    modal.style.display = 'grid';
+    div.style.width = '667px';
+    show.style.display = 'none';
+    hide.style.display = 'inline-block';
+  }
+}
+
+/**
+ * hide tags modal
+ * @param {String} field
+ */
+function hideModal(field) {
+  const show = document.querySelector(`.show-${field}`);
+  const hide = document.querySelector(`.hide-${field}`);
+  const modal = document.querySelector(`.modal-${field}`);
+  const div = document.querySelector(`.div--${field}`);
+  const input = document.querySelector(`.input-${field}`);
+  const inputKey = field.charAt(0).toUpperCase() + field.slice(1);
+  input.setAttribute('placeholder', `${inputKey}`);
+  modalBackground.style.display = 'none';
+  modal.style.display = 'none';
+  // take back default value of advanced search field's size
+  div.style.width = '170px';
+  hide.style.display = 'none';
+  show.style.display = 'inline-block';
+}
+
+const ingredientsStr = 'ingredients';
+const appareilsStr = 'appareils';
+const ustensilsStr = 'ustensils';
+
 /**
  * display recipes when search by Ingredient tag
  * @param {String} tag
@@ -127,6 +171,9 @@ function searchByIngredientTags() {
   // remove tags that do not match ingredient input keyword
   const inputIngredients = document.querySelector('.input-ingredients');
   inputIngredients.addEventListener('input', () => {
+    hideModal(appareilsStr);
+    hideModal(ustensilsStr);
+    showModal(ingredientsStr);
     const inputKeyword = inputIngredients.value;
     const exInput = new RegExp(inputKeyword, 'gi');
     ingredientTags.forEach((ingredientTag) => ingredientTag.style.display = 'block');
@@ -181,6 +228,9 @@ function searchByAppareilTags() {
   // remove tags that do not match appareil input keyword
   const inputAppareils = document.querySelector('.input-appareils');
   inputAppareils.addEventListener('input', () => {
+    hideModal(ingredientsStr);
+    hideModal(ustensilsStr);
+    showModal(appareilsStr);
     const inputKeyword = inputAppareils.value;
     const exInput = new RegExp(inputKeyword, 'gi');
     appareilsTags.forEach((tag) => tag.style.display = 'block');
@@ -235,6 +285,9 @@ function searchByUstensilTags() {
   // remove tags that do not match ustensil input keyword
   const inputUstensils = document.querySelector('.input-ustensils');
   inputUstensils.addEventListener('input', () => {
+    hideModal(ingredientsStr);
+    hideModal(appareilsStr);
+    showModal(ustensilsStr);
     const inputKeyword = inputUstensils.value;
     const exInput = new RegExp(inputKeyword, 'gi');
     ustensilsTags.forEach((tag) => tag.style.display = 'block');
@@ -291,30 +344,6 @@ searchbar.addEventListener('input', () => {
   searchPrincipal();
 });
 
-const modalBackground = document.querySelector('.bground');
-/**
- * hide tags modal
- * @param {String} field
- */
-function hideModal(field) {
-  const show = document.querySelector(`.show-${field}`);
-  const hide = document.querySelector(`.hide-${field}`);
-  const modal = document.querySelector(`.modal-${field}`);
-  const div = document.querySelector(`.div--${field}`);
-  const input = document.querySelector(`.input-${field}`);
-  const inputKey = field.charAt(0).toUpperCase() + field.slice(1);
-  input.setAttribute('placeholder', `${inputKey}`);
-  modalBackground.style.display = 'none';
-  modal.style.display = 'none';
-  // take back default value of advanced search field's size
-  div.style.width = '170px';
-  hide.style.display = 'none';
-  show.style.display = 'inline-block';
-}
-
-const ingredientsStr = 'ingredients';
-const appareilsStr = 'appareils';
-const ustensilsStr = 'ustensils';
 /**
  * display tags modal
  * @param {String} field
