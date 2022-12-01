@@ -191,39 +191,38 @@ function recipeFactory(data) {
     if (name.toString().match(reKey)) {
       const recipeDOM = getRecipeDOM();
       div.appendChild(recipeDOM);
-      for (let i = 0; i < ingredients.length; i += 1) {
-        ingredientTags.push(ingredients[i].ingredient);
-      }
+      ingredients.forEach((i) => {
+        ingredientTags.push(i.ingredient);
+      });
       applianceTags.push(appliance);
-      for (let j = 0; j < ustensils.length; j += 1) {
-        ustensilTags.push(ustensils[j]);
-      }
+      ustensils.forEach((ustensil) => {
+        ustensilTags.push(ustensil);
+      });
     }
     if (!name.toString().match(reKey) && description.toString().match(reKey)) {
       const recipeDOM = getRecipeDOM();
       div.appendChild(recipeDOM);
-      for (let i = 0; i < ingredients.length; i += 1) {
-        ingredientTags.push(ingredients[i].ingredient);
-      }
+      ingredients.forEach((i) => {
+        ingredientTags.push(i.ingredient);
+      });
       applianceTags.push(appliance);
-      for (let j = 0; j < ustensils.length; j += 1) {
-        ustensilTags.push(ustensils[j]);
-      }
+      ustensils.forEach((ustensil) => {
+        ustensilTags.push(ustensil);
+      });
     }
-    for (let i = 0; i < ingredients.length; i += 1) {
+    ingredients.forEach((i) => {
       if (!name.toString().match(reKey)
       && !description.toString().match(reKey)
-      && ingredients[i].ingredient.toString().match(reKey)) {
+      && i.ingredient.toString().match(reKey)) {
         const recipeDOM = getRecipeDOM();
         div.appendChild(recipeDOM);
-        ingredientTags.push(ingredients[i].ingredient);
+        ingredientTags.push(i.ingredient);
         applianceTags.push(appliance);
-        for (let j = 0; j < ustensils.length; j += 1) {
-          ustensilTags.push(ustensils[j]);
-        }
-        break;
+        ustensils.forEach((ustensil) => {
+          ustensilTags.push(ustensil);
+        });
       }
-    }
+    });
     const ingredientsField = 'ingredients';
     addTags(ingredientTags, ingredientsField);
     const applianceField = 'appareils';
