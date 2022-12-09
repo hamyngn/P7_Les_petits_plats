@@ -147,6 +147,10 @@ input:focus {
   cursor: pointer;
 }
 
+div[clicked=clicked] {
+  text-decoration: white underline;
+}
+
 .modal-appareils .appareils {
   cursor: pointer;
 }
@@ -228,6 +232,7 @@ ul {
 .tags {
   display: none;
   margin-top: 25px;
+  flex-wrap: nowrap;
 }
 .tags .tag {
   background-color: #3282F7;

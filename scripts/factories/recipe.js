@@ -52,6 +52,43 @@ function recipeFactory(data) {
     return article;
   }
 
+  /**
+   * add tags include keyword to advanced search
+   * @param {Array} tags
+   * @param {String} field
+   */
+  function addTags(tags, field) {
+    const modal = document.querySelector(`.modal-${field}`);
+    for (let k = 0; k < tags.length; k += 1) {
+      const keySuggest = document.createElement('div');
+      keySuggest.setAttribute('class', field);
+      keySuggest.innerHTML = tags[k];
+      modal.appendChild(keySuggest);
+    }
+  }
+
+  /**
+   * get All Tags of a recipe
+   */
+  function getTags() {
+    const ingredientTags = [];
+    const applianceTags = [];
+    const ustensilTags = [];
+    ingredients.forEach((i) => {
+      ingredientTags.push(i.ingredient);
+    });
+    applianceTags.push(appliance);
+    ustensils.forEach((ustensil) => {
+      ustensilTags.push(ustensil);
+    });
+    const ingredientsField = 'ingredients';
+    addTags(ingredientTags, ingredientsField);
+    const applianceField = 'appareils';
+    addTags(applianceTags, applianceField);
+    const ustensilField = 'ustensils';
+    addTags(ustensilTags, ustensilField);
+  }
+
   const keyword = document.querySelector('.search-bar').value;
   const reKey = new RegExp(keyword, 'gi');
 
@@ -167,48 +204,18 @@ function recipeFactory(data) {
     }
   }
 
-  /**
-   * add tags include keyword to advanced search
-   * @param {Array} tags
-   * @param {String} field
-   */
-  function addTags(tags, field) {
-    const modal = document.querySelector(`.modal-${field}`);
-    for (let k = 0; k < tags.length; k += 1) {
-      const keySuggest = document.createElement('div');
-      keySuggest.setAttribute('class', field);
-      keySuggest.innerHTML = tags[k];
-      modal.appendChild(keySuggest);
-    }
-  }
-
   // principle search
   function search() {
-    const ingredientTags = [];
-    const applianceTags = [];
-    const ustensilTags = [];
     const div = document.querySelector('.search-result');
     if (name.toString().match(reKey)) {
       const recipeDOM = getRecipeDOM();
       div.appendChild(recipeDOM);
-      ingredients.forEach((i) => {
-        ingredientTags.push(i.ingredient);
-      });
-      applianceTags.push(appliance);
-      ustensils.forEach((ustensil) => {
-        ustensilTags.push(ustensil);
-      });
+      getTags();
     }
     if (!name.toString().match(reKey) && description.toString().match(reKey)) {
       const recipeDOM = getRecipeDOM();
       div.appendChild(recipeDOM);
-      ingredients.forEach((i) => {
-        ingredientTags.push(i.ingredient);
-      });
-      applianceTags.push(appliance);
-      ustensils.forEach((ustensil) => {
-        ustensilTags.push(ustensil);
-      });
+      getTags();
     }
     ingredients.forEach((i) => {
       if (!name.toString().match(reKey)
@@ -216,19 +223,9 @@ function recipeFactory(data) {
       && i.ingredient.toString().match(reKey)) {
         const recipeDOM = getRecipeDOM();
         div.appendChild(recipeDOM);
-        ingredientTags.push(i.ingredient);
-        applianceTags.push(appliance);
-        ustensils.forEach((ustensil) => {
-          ustensilTags.push(ustensil);
-        });
+        getTags();
       }
     });
-    const ingredientsField = 'ingredients';
-    addTags(ingredientTags, ingredientsField);
-    const applianceField = 'appareils';
-    addTags(applianceTags, applianceField);
-    const ustensilField = 'ustensils';
-    addTags(ustensilTags, ustensilField);
   }
 
   return {
@@ -241,6 +238,7 @@ function recipeFactory(data) {
     appliance,
     ustensils,
     getRecipeDOM,
+    getTags,
     search,
     advancedSearchIngredient,
     advancedSearchAppareil,
