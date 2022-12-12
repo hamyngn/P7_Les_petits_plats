@@ -200,31 +200,43 @@ div[clicked="clicked"] {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 20px 0;
+        padding-bottom: 20px;
+    }
+    span {
+        width: 20%;
+        text-align: end;
     }
     h1 {
         margin: 0;
         font-size: 18px;
         line-height: 22px;
+        height: 22px;
+        width: 80%;
+        overflow: hidden;
     }
 
     // ingredients and description element
     .intro {
         display: flex;
-        height: 109px;
     }
     .ingredients {
         flex: 1;
         font-size: 12px;
         line-height: 14px;
         font-weight: 700;
+        height: 109px;
+        overflow: hidden;
+        margin-right: 10px;
     }
     .description {
         flex: 1;
         margin: 0;
         font-size: 12px;
         line-height: 12px;
-        text-overflow: ellipsis;
+        max-height: 72px;
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
         overflow: hidden;
     }
 }
