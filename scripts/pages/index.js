@@ -426,7 +426,6 @@ async function searchPrincipal() {
   if (keyword.length >= 3) {
     for (let k = 0; k < recipes.length; k += 1) {
       const recipeModel = recipeFactory(recipes[k]);
-      // function display recipes and tags that include keyword
       recipeModel.search();
     }
     removeSameResult();

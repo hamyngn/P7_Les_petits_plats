@@ -204,7 +204,9 @@ function recipeFactory(data) {
     }
   }
 
-  // principle search
+  /**
+   * display recipes and tags that include keyword
+   */
   function search() {
     const div = document.querySelector('.search-result');
     if (name.toString().match(reKey)) {
