@@ -159,6 +159,11 @@ input:focus {
   cursor: pointer;
 }
 
+div[clicked=clicked] {
+  -webkit-text-decoration: white underline;
+          text-decoration: white underline;
+}
+
 .modal-appareils .appareils {
   cursor: pointer;
 }
@@ -191,7 +196,11 @@ input:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 0;
+  padding-bottom: 20px;
+}
+.abstract span {
+  width: 100px;
+  text-align: end;
 }
 .abstract h1 {
   margin: 0;
@@ -240,6 +249,7 @@ ul {
 .tags {
   display: none;
   margin-top: 25px;
+  flex-wrap: nowrap;
 }
 .tags .tag {
   background-color: #3282F7;

@@ -157,6 +157,10 @@ input:focus {
     }
 }
 
+div[clicked="clicked"] {
+    text-decoration: white underline;
+}
+
 .modal-appareils {
     .appareils {
         cursor: pointer;
@@ -196,7 +200,11 @@ input:focus {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 20px 0;
+        padding-bottom: 20px;
+    }
+    span {
+        width: 100px;
+        text-align: end;
     }
     h1 {
         margin: 0;
@@ -251,6 +259,7 @@ ul {
 .tags {
     display: none;
     margin-top: 25px;
+    flex-wrap: nowrap;
     .tag {
         background-color: $primary-color;
         border-radius: 5px;

@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-console */
@@ -28,11 +29,27 @@ async function displayRecipes(recipes) {
 }
 
 /**
+ * create all tags
+ * @param {Array} recipes
+ */
+async function displayAllTags(recipes) {
+  recipes.forEach((recipe) => {
+    const recipeModel = recipeFactory(recipe);
+    recipeModel.getTags();
+  });
+  displayTags();
+  searchByIngredientTags();
+  searchByAppareilTags();
+  searchByUstensilTags();
+}
+
+/**
  * display all recipes
  */
 async function init() {
   const { recipes } = await getRecipes();
   displayRecipes(recipes);
+  displayAllTags(recipes);
 }
 
 window.onload = () => {
@@ -86,24 +103,42 @@ function noResult() {
   }
 }
 
+/**
+ * remove same recipes search result when search by tags
+ */
+function removeSameResult() {
+  if (searchResult.hasChildNodes()) {
+    const articles = searchResult.querySelectorAll('article');
+    const articlesArr = [];
+    for (let j = 0; j < articles.length; j += 1) {
+      articlesArr.push(articles[j].querySelector('h1').innerHTML);
+    }
+    const uniqueArticles = [];
+    for (let k = 0; k < articlesArr.length; k += 1) {
+      if (!uniqueArticles.includes(articlesArr[k])) {
+        uniqueArticles.push(articlesArr[k]);
+      } else {
+        articles[k].remove();
+      }
+    }
+  }
+}
+
 const modalBackground = document.querySelector('.bground');
 /**
  * open tags modal
  * @param {String} field
  */
 function showModal(field) {
-  const keyword = document.querySelector('.search-bar').value;
-  if (keyword.length >= 3) {
-    const show = document.querySelector(`.show-${field}`);
-    const hide = document.querySelector(`.hide-${field}`);
-    const modal = document.querySelector(`.modal-${field}`);
-    const div = document.querySelector(`.div--${field}`);
-    modalBackground.style.display = 'block';
-    modal.style.display = 'grid';
-    div.style.width = '667px';
-    show.style.display = 'none';
-    hide.style.display = 'inline-block';
-  }
+  const show = document.querySelector(`.show-${field}`);
+  const hide = document.querySelector(`.hide-${field}`);
+  const modal = document.querySelector(`.modal-${field}`);
+  const div = document.querySelector(`.div--${field}`);
+  modalBackground.style.display = 'block';
+  modal.style.display = 'grid';
+  div.style.width = '667px';
+  show.style.display = 'none';
+  hide.style.display = 'inline-block';
 }
 
 /**
@@ -129,6 +164,7 @@ function hideModal(field) {
 const ingredientsStr = 'ingredients';
 const appareilsStr = 'appareils';
 const ustensilsStr = 'ustensils';
+const recipesBlock = document.querySelector('.section--recipes');
 
 /**
  * display recipes when search by Ingredient tag
@@ -136,39 +172,54 @@ const ustensilsStr = 'ustensils';
  */
 async function searchByIngredientTag(tag) {
   const { recipes } = await getRecipes();
-  const div = document.querySelector('.search-result');
-  div.replaceChildren();
   for (let k = 0; k < recipes.length; k += 1) {
     const recipeModel = recipeFactory(recipes[k]);
     recipeModel.advancedSearchIngredient(tag);
   }
+  removeSameResult();
 }
 
 /**
- * add onlick event to ingredient tags and remove tags that do not match ingredient input keyword
+ * update recipes search result when remove a tag
  */
-function searchByIngredientTags() {
-  const tags = document.querySelector('.tags');
+function searchByTagList() {
+  const tagList = document.querySelectorAll('.tag');
   const ingredientTags = document.querySelectorAll('.modal-ingredients .ingredients');
-  // add onlick event to ingredient tags
-  for (let i = 0; i < ingredientTags.length; i += 1) {
-    ingredientTags[i].addEventListener('click', () => {
-      searchByIngredientTag(ingredientTags[i].innerHTML);
-      ingredientTags[i].setAttribute('clicked', 'clicked');
-      const div = document.createElement('div');
-      div.setAttribute('class', 'tag');
-      div.innerHTML = ingredientTags[i].innerHTML;
-      const span = document.createElement('span');
-      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
-      span.addEventListener('click', () => {
-        div.style.display = 'none';
-      });
-      div.appendChild(span);
-      tags.appendChild(div);
-      tags.style.display = 'flex';
-    });
+  const appareilsTags = document.querySelectorAll('.modal-appareils .appareils');
+  const ustensilsTags = document.querySelectorAll('.modal-ustensils .ustensils');
+  if (tagList.length >= 1) {
+    searchResult.replaceChildren();
+    for (let i = 0; i < tagList.length; i += 1) {
+      for (let j = 0; j < ingredientTags.length; j += 1) {
+        if (ingredientTags[j].textContent.includes(tagList[i].textContent)) {
+          searchByIngredientTag(tagList[i].textContent);
+        }
+      }
+    }
+    for (let i = 0; i < tagList.length; i += 1) {
+      for (let j = 0; j < appareilsTags.length; j += 1) {
+        if (appareilsTags[j].textContent.includes(tagList[i].textContent)) {
+          searchByAppareilTag(tagList[i].textContent);
+        }
+      }
+    }
+    for (let i = 0; i < tagList.length; i += 1) {
+      for (let j = 0; j < ustensilsTags.length; j += 1) {
+        if (ustensilsTags[j].textContent.includes(tagList[i].textContent)) {
+          searchByUstensilTag(tagList[i].textContent);
+        }
+      }
+    }
+  } else {
+    searchResult.replaceChildren();
   }
-  // remove tags that do not match ingredient input keyword
+}
+
+/**
+ * remove tags that do not match ingredient input keyword
+ */
+function removeNotMatchedTagsIng() {
+  const ingredientTags = document.querySelectorAll('.modal-ingredients .ingredients');
   const inputIngredients = document.querySelector('.input-ingredients');
   inputIngredients.addEventListener('input', () => {
     hideModal(appareilsStr);
@@ -188,44 +239,60 @@ function searchByIngredientTags() {
 }
 
 /**
+ * add onlick event to ingredient tags and remove tags that do not match ingredient input keyword
+ */
+function searchByIngredientTags() {
+  const ingredientTags = document.querySelectorAll('.modal-ingredients .ingredients');
+  const tags = document.querySelector('.tags');
+  // add onlick event to ingredient tags
+  for (let i = 0; i < ingredientTags.length; i += 1) {
+    ingredientTags[i].addEventListener('click', () => {
+      searchByIngredientTag(ingredientTags[i].innerHTML);
+      ingredientTags[i].setAttribute('clicked', 'clicked');
+      ingredientTags[i].style.pointerEvents = 'none';
+      const div = document.createElement('div');
+      div.setAttribute('class', 'tag');
+      div.innerHTML = ingredientTags[i].innerHTML;
+      const span = document.createElement('span');
+      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
+      span.addEventListener('click', () => {
+        div.remove();
+        ingredientTags[i].style.pointerEvents = 'auto';
+        searchByTagList();
+      });
+      div.appendChild(span);
+      tags.appendChild(div);
+      tags.style.display = 'flex';
+      const clickedTags = document.querySelectorAll('.tag');
+      if (clickedTags.length === 1) {
+        searchResult.replaceChildren();
+      }
+      result.style.display = 'block'; // display searching result
+      recipesBlock.style.display = 'none'; // hide block that include all recipes
+    });
+  }
+  removeNotMatchedTagsIng();
+}
+
+/**
  * search by Appareil tag
  * @param {String} tag
  */
 async function searchByAppareilTag(tag) {
   const { recipes } = await getRecipes();
-  const div = document.querySelector('.search-result');
-  div.replaceChildren();
+
   for (let k = 0; k < recipes.length; k += 1) {
     const recipeModel = recipeFactory(recipes[k]);
     recipeModel.advancedSearchAppareil(tag);
   }
+  removeSameResult();
 }
 
 /**
- * add onlick event to appareil tags and remove tags that do not match appareil input keyword
+ * remove tags that do not match appareil input keyword
  */
-function searchByAppareilTags() {
-  const tags = document.querySelector('.tags');
+function removeNotMatchedTagsApp() {
   const appareilsTags = document.querySelectorAll('.modal-appareils .appareils');
-  // add onlick event to appareil tags
-  for (let j = 0; j < appareilsTags.length; j += 1) {
-    appareilsTags[j].addEventListener('click', () => {
-      searchByAppareilTag(appareilsTags[j].innerHTML);
-      appareilsTags[j].setAttribute('clicked', 'clicked');
-      const div = document.createElement('div');
-      div.setAttribute('class', 'tag');
-      div.innerHTML = appareilsTags[j].innerHTML;
-      const span = document.createElement('span');
-      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
-      span.addEventListener('click', () => {
-        div.style.display = 'none';
-      });
-      div.appendChild(span);
-      tags.appendChild(div);
-      tags.style.display = 'flex';
-    });
-  }
-  // remove tags that do not match appareil input keyword
   const inputAppareils = document.querySelector('.input-appareils');
   inputAppareils.addEventListener('input', () => {
     hideModal(ingredientsStr);
@@ -243,6 +310,41 @@ function searchByAppareilTags() {
     }
   });
 }
+/**
+ * add onlick event to appareil tags and remove tags that do not match appareil input keyword
+ */
+function searchByAppareilTags() {
+  const appareilsTags = document.querySelectorAll('.modal-appareils .appareils');
+  const tags = document.querySelector('.tags');
+  // add onlick event to appareil tags
+  for (let j = 0; j < appareilsTags.length; j += 1) {
+    appareilsTags[j].addEventListener('click', () => {
+      searchByAppareilTag(appareilsTags[j].innerHTML);
+      appareilsTags[j].setAttribute('clicked', 'clicked');
+      appareilsTags[j].style.pointerEvents = 'none';
+      const div = document.createElement('div');
+      div.setAttribute('class', 'tag');
+      div.innerHTML = appareilsTags[j].innerHTML;
+      const span = document.createElement('span');
+      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
+      span.addEventListener('click', () => {
+        div.remove();
+        appareilsTags[j].style.pointerEvents = 'auto';
+        searchByTagList();
+      });
+      div.appendChild(span);
+      tags.appendChild(div);
+      tags.style.display = 'flex';
+      const clickedTags = document.querySelectorAll('.tag');
+      if (clickedTags.length === 1) {
+        searchResult.replaceChildren();
+      }
+      result.style.display = 'block'; // display searching result
+      recipesBlock.style.display = 'none'; // hide block that include all recipes
+    });
+  }
+  removeNotMatchedTagsApp();
+}
 
 /**
  * display recipes when search by ustensil tag
@@ -250,39 +352,18 @@ function searchByAppareilTags() {
  */
 async function searchByUstensilTag(tag) {
   const { recipes } = await getRecipes();
-  const div = document.querySelector('.search-result');
-  div.replaceChildren();
   for (let k = 0; k < recipes.length; k += 1) {
     const recipeModel = recipeFactory(recipes[k]);
     recipeModel.advancedSearchUstensil(tag);
   }
+  removeSameResult();
 }
 
 /**
- * add onlick event to ustensil tags and remove tags that do not match ustensil input keyword
+ * remove tags that do not match ustensil input keyword
  */
-function searchByUstensilTags() {
+function removeNotMatchedTagUstensil() {
   const ustensilsTags = document.querySelectorAll('.modal-ustensils .ustensils');
-  const tags = document.querySelector('.tags');
-  // add onlick event to ustensil tags
-  for (let i = 0; i < ustensilsTags.length; i += 1) {
-    ustensilsTags[i].addEventListener('click', () => {
-      searchByUstensilTag(ustensilsTags[i].innerHTML);
-      ustensilsTags[i].setAttribute('clicked', 'clicked');
-      const div = document.createElement('div');
-      div.setAttribute('class', 'tag');
-      div.innerHTML = ustensilsTags[i].innerHTML;
-      const span = document.createElement('span');
-      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
-      span.addEventListener('click', () => {
-        div.style.display = 'none';
-      });
-      div.appendChild(span);
-      tags.appendChild(div);
-      tags.style.display = 'flex';
-    });
-  }
-  // remove tags that do not match ustensil input keyword
   const inputUstensils = document.querySelector('.input-ustensils');
   inputUstensils.addEventListener('input', () => {
     hideModal(ingredientsStr);
@@ -300,28 +381,64 @@ function searchByUstensilTags() {
     }
   });
 }
+/**
+ * add onlick event to ustensil tags and remove tags that do not match ustensil input keyword
+ */
+function searchByUstensilTags() {
+  const ustensilsTags = document.querySelectorAll('.modal-ustensils .ustensils');
+  const tags = document.querySelector('.tags');
+  // add onlick event to ustensil tags
+  for (let i = 0; i < ustensilsTags.length; i += 1) {
+    ustensilsTags[i].addEventListener('click', () => {
+      searchByUstensilTag(ustensilsTags[i].innerHTML);
+      ustensilsTags[i].setAttribute('clicked', 'clicked');
+      ustensilsTags[i].style.pointerEvents = 'none';
+      const div = document.createElement('div');
+      div.setAttribute('class', 'tag');
+      div.innerHTML = ustensilsTags[i].innerHTML;
+      const span = document.createElement('span');
+      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
+      span.addEventListener('click', () => {
+        div.remove();
+        ustensilsTags[i].style.pointerEvents = 'auto';
+        searchByTagList();
+      });
+      div.appendChild(span);
+      tags.appendChild(div);
+      tags.style.display = 'flex';
+      const clickedTags = document.querySelectorAll('.tag');
+      if (clickedTags.length === 1) {
+        searchResult.replaceChildren();
+      }
+      result.style.display = 'block'; // display searching result
+      recipesBlock.style.display = 'none'; // hide block that include all recipes
+    });
+  }
+  removeNotMatchedTagUstensil();
+}
 
 /**
  * display search result
  */
 async function searchPrincipal() {
   const keyword = document.querySelector('.search-bar').value;
+  const { recipes } = await getRecipes();
   if (keyword.length >= 3) {
-    searchResult.replaceChildren();
-    const { recipes } = await getRecipes();
     for (let k = 0; k < recipes.length; k += 1) {
       const recipeModel = recipeFactory(recipes[k]);
       // function display recipes and tags that include keyword
       recipeModel.search();
     }
+    removeSameResult();
     result.style.display = 'block'; // display searching result
-    const recipesBlock = document.querySelector('.section--recipes');
     recipesBlock.style.display = 'none'; // hide block that include all recipes
     noResult(); // display message no result
     displayTags();
     searchByIngredientTags();
     searchByAppareilTags();
     searchByUstensilTags();
+  } else {
+    init();
   }
 }
 
@@ -338,9 +455,12 @@ function clearTags() {
   modalUstensils.replaceChildren();
 }
 
+const tagsDiv = document.querySelector('.tags');
 const searchbar = document.querySelector('.search-bar');
 searchbar.addEventListener('input', () => {
   clearTags();
+  tagsDiv.replaceChildren();
+  searchResult.replaceChildren();
   searchPrincipal();
 });
 
@@ -349,27 +469,24 @@ searchbar.addEventListener('input', () => {
  * @param {String} field
  */
 function showAndHideModal(field) {
-  const keyword = document.querySelector('.search-bar').value;
-  if (keyword.length >= 3) {
-    const show = document.querySelector(`.show-${field}`);
-    const hide = document.querySelector(`.hide-${field}`);
-    const modal = document.querySelector(`.modal-${field}`);
-    const div = document.querySelector(`.div--${field}`);
-    const input = document.querySelector(`.input-${field}`);
-    if (hide.style.display === 'none') {
-      hideModal(ingredientsStr);
-      hideModal(appareilsStr);
-      hideModal(ustensilsStr);
-      modalBackground.style.display = 'block';
-      modal.style.display = 'grid';
-      div.style.width = '667px';
-      show.style.display = 'none';
-      hide.style.display = 'inline-block';
-      const inputKey = field.slice(0, -1);
-      input.setAttribute('placeholder', `Rechercher un ${inputKey}`);
-    } else {
-      hideModal(field);
-    }
+  const show = document.querySelector(`.show-${field}`);
+  const hide = document.querySelector(`.hide-${field}`);
+  const modal = document.querySelector(`.modal-${field}`);
+  const div = document.querySelector(`.div--${field}`);
+  const input = document.querySelector(`.input-${field}`);
+  if (hide.style.display === 'none') {
+    hideModal(ingredientsStr);
+    hideModal(appareilsStr);
+    hideModal(ustensilsStr);
+    modalBackground.style.display = 'block';
+    modal.style.display = 'grid';
+    div.style.width = '667px';
+    show.style.display = 'none';
+    hide.style.display = 'inline-block';
+    const inputKey = field.slice(0, -1);
+    input.setAttribute('placeholder', `Rechercher un ${inputKey}`);
+  } else {
+    hideModal(field);
   }
 }
 
