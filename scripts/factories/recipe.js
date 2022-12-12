@@ -33,10 +33,16 @@ function recipeFactory(data) {
       const li = document.createElement('li');
       li.innerHTML = ingredients[k].ingredient;
       if (Object.prototype.hasOwnProperty.call(ingredients[k], 'quantity')) {
-        li.innerHTML = `${ingredients[k].ingredient}: ${ingredients[k].quantity}`;
+        li.innerHTML = `${ingredients[k].ingredient}: `;
+        const spanQuantity = document.createElement('span');
+        li.appendChild(spanQuantity);
+        spanQuantity.innerHTML = `${ingredients[k].quantity}`;
       }
       if (Object.prototype.hasOwnProperty.call(ingredients[k], 'unit')) {
-        li.innerHTML = `${ingredients[k].ingredient}: ${ingredients[k].quantity} ${ingredients[k].unit}`;
+        li.innerHTML = `${ingredients[k].ingredient}: `;
+        const spanQuantity = document.createElement('span');
+        li.appendChild(spanQuantity);
+        spanQuantity.innerHTML = `${ingredients[k].quantity} ${ingredients[k].unit}`;
       }
       ul.appendChild(li);
     }
