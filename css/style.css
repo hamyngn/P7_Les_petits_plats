@@ -227,6 +227,15 @@ ul {
   list-style-type: none;
 }
 
+li {
+  overflow: hidden;
+  height: 14px;
+}
+
+li span {
+  font-weight: 400;
+}
+
 .result {
   display: none;
   position: absolute;

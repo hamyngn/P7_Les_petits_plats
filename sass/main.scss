@@ -245,7 +245,15 @@ div[clicked="clicked"] {
 ul {
     margin: 0;
     padding: 0;
-    list-style-type: none;  
+    list-style-type: none;
+}
+
+li {
+    overflow: hidden;
+    height: 14px;
+}
+li span {
+    font-weight: 400;
 }
 
 // search result recipes
