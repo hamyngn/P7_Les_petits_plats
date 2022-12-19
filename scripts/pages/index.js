@@ -110,19 +110,17 @@ function removeSameResult() {
   if (searchResult.hasChildNodes()) {
     const articles = searchResult.querySelectorAll('article');
     const articlesArr = [];
-    articles.forEach((article) => articlesArr.push(article.querySelector('h1').innerHTML));
+    for (let j = 0; j < articles.length; j += 1) {
+      articlesArr.push(articles[j].querySelector('h1').innerHTML);
+    }
     const uniqueArticles = [];
-    articlesArr.forEach((a) => {
-      if (!uniqueArticles.includes(a)) {
-        uniqueArticles.push(a);
+    for (let k = 0; k < articlesArr.length; k += 1) {
+      if (!uniqueArticles.includes(articlesArr[k])) {
+        uniqueArticles.push(articlesArr[k]);
       } else {
-        articles.forEach((article) => {
-          if (article === a) {
-            article.remove();
-          }
-        });
+        articles[k].remove();
       }
-    });
+    }
   } else {
     noResult();
   }
@@ -366,11 +364,10 @@ async function searchPrincipal() {
   const keyword = document.querySelector('.search-bar').value;
   const { recipes } = await getRecipes();
   if (keyword.length >= 3) {
-    recipes.forEach((recipe) => {
-      const recipeModel = recipeFactory(recipe);
-      // function display recipes and tags that include keyword
+    for (let k = 0; k < recipes.length; k += 1) {
+      const recipeModel = recipeFactory(recipes[k]);
       recipeModel.search();
-    });
+    }
     removeSameResult();
     result.style.display = 'block'; // display searching result
     recipesBlock.style.display = 'none'; // hide block that include all recipes
