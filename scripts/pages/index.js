@@ -110,17 +110,29 @@ function removeSameResult() {
   if (searchResult.hasChildNodes()) {
     const articles = searchResult.querySelectorAll('article');
     const articlesArr = [];
-    for (let j = 0; j < articles.length; j += 1) {
+    articles.forEach((article) => articlesArr.push(article.querySelector('h1').innerHTML));
+    /* for (let j = 0; j < articles.length; j += 1) {
       articlesArr.push(articles[j].querySelector('h1').innerHTML);
-    }
+    } */
     const uniqueArticles = [];
-    for (let k = 0; k < articlesArr.length; k += 1) {
+    articlesArr.forEach((a) => {
+      if (!uniqueArticles.includes(a)) {
+        uniqueArticles.push(a);
+      } else {
+        articles.forEach((article) => {
+          if (article === a) {
+            article.remove();
+          }
+        });
+      }
+    });
+    /* for (let k = 0; k < articlesArr.length; k += 1) {
       if (!uniqueArticles.includes(articlesArr[k])) {
         uniqueArticles.push(articlesArr[k]);
       } else {
         articles[k].remove();
       }
-    }
+    } */
   }
 }
 
