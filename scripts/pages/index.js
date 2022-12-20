@@ -35,9 +35,9 @@ async function displayAllTags(recipes) {
     getTags(recipe);
   });
   displayTags();
-  searchByIngredientTags();
-  searchByAppareilTags();
-  searchByUstensilTags();
+  searchByTags(ingredientsStr);
+  searchByTags(appareilsStr);
+  searchByTags(ustensilsStr);
 }
 
 /**
@@ -73,15 +73,15 @@ function removeSameTags(item) {
   }
 }
 
+const ingredientsStr = 'ingredients';
+const appareilsStr = 'appareils';
+const ustensilsStr = 'ustensils';
 /**
  * display updated ingredient, appareil, ustensil tags after removing cached
  */
 function displayTags() {
-  const ingredientsStr = 'ingredients';
   removeSameTags(ingredientsStr); // remove same tags in searching by ingredients
-  const appareilsStr = 'appareils';
   removeSameTags(appareilsStr);
-  const ustensilsStr = 'ustensils';
   removeSameTags(ustensilsStr);
 }
 
@@ -97,29 +97,6 @@ function noResult() {
     p.style.width = '100vw';
     p.textContent = 'Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc.';
     searchResult.appendChild(p);
-  }
-}
-
-/**
- * remove same recipes search result when search by tags
- */
-function removeSameResult() {
-  if (searchResult.hasChildNodes()) {
-    const articles = searchResult.querySelectorAll('article');
-    const articlesArr = [];
-    for (let j = 0; j < articles.length; j += 1) {
-      articlesArr.push(articles[j].querySelector('h1').innerHTML);
-    }
-    const uniqueArticles = [];
-    for (let k = 0; k < articlesArr.length; k += 1) {
-      if (!uniqueArticles.includes(articlesArr[k])) {
-        uniqueArticles.push(articlesArr[k]);
-      } else {
-        articles[k].remove();
-      }
-    }
-  } else {
-    noResult();
   }
 }
 
@@ -160,9 +137,6 @@ function hideModal(field) {
   show.style.display = 'inline-block';
 }
 
-const ingredientsStr = 'ingredients';
-const appareilsStr = 'appareils';
-const ustensilsStr = 'ustensils';
 const recipesBlock = document.querySelector('.section--recipes');
 
 /**
@@ -174,26 +148,26 @@ async function searchByTagListAndKey() {
   for (let k = 0; k < recipes.length; k += 1) {
     advancedSearchTagsAndKey(recipes[k]);
   }
-  removeSameResult();
+  noResult();
 }
 
 /**
- * remove tags that do not match ingredient input keyword
+ * remove tags that do not match advanced input keyword
  */
-function removeNotMatchedTagsIng() {
-  const ingredientTags = document.querySelectorAll('.modal-ingredients .ingredients');
-  const inputIngredients = document.querySelector('.input-ingredients');
+function removeNotMatchedTags(field) {
+  const fieldTags = document.querySelectorAll(`.modal-${field} .${field}`);
+  const inputIngredients = document.querySelector(`.input-${field}`);
   inputIngredients.addEventListener('input', () => {
     hideModal(appareilsStr);
     hideModal(ustensilsStr);
     showModal(ingredientsStr);
     const inputKeyword = inputIngredients.value;
     const exInput = new RegExp(inputKeyword, 'gi');
-    ingredientTags.forEach((ingredientTag) => ingredientTag.style.display = 'block');
+    fieldTags.forEach((ingredientTag) => ingredientTag.style.display = 'block');
     if (inputKeyword !== '') {
-      for (let i = 0; i < ingredientTags.length; i += 1) {
-        if (!ingredientTags[i].innerHTML.match(exInput)) {
-          ingredientTags[i].style.display = 'none';
+      for (let i = 0; i < fieldTags.length; i += 1) {
+        if (!fieldTags[i].innerHTML.match(exInput)) {
+          fieldTags[i].style.display = 'none';
         }
       }
     }
@@ -201,24 +175,24 @@ function removeNotMatchedTagsIng() {
 }
 
 /**
- * add onlick event to ingredient tags and remove tags that do not match ingredient input keyword
+ * add onlick event to tags and remove tags that do not match input keyword
  */
-function searchByIngredientTags() {
-  const ingredientTags = document.querySelectorAll('.modal-ingredients .ingredients');
+function searchByTags(field) {
+  const fieldTags = document.querySelectorAll(`.modal-${field} .${field}`);
   const tags = document.querySelector('.tags');
   // add onlick event to ingredient tags
-  for (let i = 0; i < ingredientTags.length; i += 1) {
-    ingredientTags[i].addEventListener('click', () => {
-      ingredientTags[i].setAttribute('clicked', 'clicked');
-      ingredientTags[i].style.pointerEvents = 'none';
+  for (let i = 0; i < fieldTags.length; i += 1) {
+    fieldTags[i].addEventListener('click', () => {
+      fieldTags[i].setAttribute('clicked', 'clicked');
+      fieldTags[i].style.pointerEvents = 'none';
       const div = document.createElement('div');
-      div.setAttribute('class', 'tag ingredient-tag');
-      div.innerHTML = ingredientTags[i].innerHTML;
+      div.setAttribute('class', `tag ${field}-tag`);
+      div.innerHTML = fieldTags[i].innerHTML;
       const span = document.createElement('span');
       span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
       span.addEventListener('click', () => {
         div.remove();
-        ingredientTags[i].style.pointerEvents = 'auto';
+        fieldTags[i].style.pointerEvents = 'auto';
         searchByTagListAndKey();
       });
       div.appendChild(span);
@@ -233,116 +207,7 @@ function searchByIngredientTags() {
       recipesBlock.style.display = 'none'; // hide block that include all recipes
     });
   }
-  removeNotMatchedTagsIng();
-}
-
-/**
- * remove tags that do not match appareil input keyword
- */
-function removeNotMatchedTagsApp() {
-  const appareilsTags = document.querySelectorAll('.modal-appareils .appareils');
-  const inputAppareils = document.querySelector('.input-appareils');
-  inputAppareils.addEventListener('input', () => {
-    hideModal(ingredientsStr);
-    hideModal(ustensilsStr);
-    showModal(appareilsStr);
-    const inputKeyword = inputAppareils.value;
-    const exInput = new RegExp(inputKeyword, 'gi');
-    appareilsTags.forEach((tag) => tag.style.display = 'block');
-    if (inputKeyword !== '') {
-      for (let i = 0; i < appareilsTags.length; i += 1) {
-        if (!appareilsTags[i].innerHTML.match(exInput)) {
-          appareilsTags[i].style.display = 'none';
-        }
-      }
-    }
-  });
-}
-/**
- * add onlick event to appareil tags and remove tags that do not match appareil input keyword
- */
-function searchByAppareilTags() {
-  const appareilsTags = document.querySelectorAll('.modal-appareils .appareils');
-  const tags = document.querySelector('.tags');
-  // add onlick event to appareil tags
-  for (let j = 0; j < appareilsTags.length; j += 1) {
-    appareilsTags[j].addEventListener('click', () => {
-      appareilsTags[j].setAttribute('clicked', 'clicked');
-      appareilsTags[j].style.pointerEvents = 'none';
-      const div = document.createElement('div');
-      div.setAttribute('class', 'tag appareil-tag');
-      div.innerHTML = appareilsTags[j].innerHTML;
-      const span = document.createElement('span');
-      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
-      span.addEventListener('click', () => {
-        div.remove();
-        appareilsTags[j].style.pointerEvents = 'auto';
-        searchByTagListAndKey();
-      });
-      div.appendChild(span);
-      tags.appendChild(div);
-      tags.style.display = 'flex';
-      searchByTagListAndKey();
-      result.style.display = 'block'; // display searching result
-      recipesBlock.style.display = 'none'; // hide block that include all recipes
-    });
-  }
-  removeNotMatchedTagsApp();
-}
-
-/**
- * remove tags that do not match ustensil input keyword
- */
-function removeNotMatchedTagUstensil() {
-  const ustensilsTags = document.querySelectorAll('.modal-ustensils .ustensils');
-  const inputUstensils = document.querySelector('.input-ustensils');
-  inputUstensils.addEventListener('input', () => {
-    hideModal(ingredientsStr);
-    hideModal(appareilsStr);
-    showModal(ustensilsStr);
-    const inputKeyword = inputUstensils.value;
-    const exInput = new RegExp(inputKeyword, 'gi');
-    ustensilsTags.forEach((tag) => tag.style.display = 'block');
-    if (inputKeyword !== '') {
-      for (let i = 0; i < ustensilsTags.length; i += 1) {
-        if (!ustensilsTags[i].innerHTML.match(exInput)) {
-          ustensilsTags[i].style.display = 'none';
-        }
-      }
-    }
-  });
-}
-
-/**
- * add onlick event to ustensil tags and remove tags that do not match ustensil input keyword
- */
-function searchByUstensilTags() {
-  const ustensilsTags = document.querySelectorAll('.modal-ustensils .ustensils');
-  const tags = document.querySelector('.tags');
-  // add onlick event to ustensil tags
-  for (let i = 0; i < ustensilsTags.length; i += 1) {
-    ustensilsTags[i].addEventListener('click', () => {
-      ustensilsTags[i].setAttribute('clicked', 'clicked');
-      ustensilsTags[i].style.pointerEvents = 'none';
-      const div = document.createElement('div');
-      div.setAttribute('class', 'tag ustensil-tag');
-      div.innerHTML = ustensilsTags[i].innerHTML;
-      const span = document.createElement('span');
-      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
-      span.addEventListener('click', () => {
-        div.remove();
-        ustensilsTags[i].style.pointerEvents = 'auto';
-        searchByTagListAndKey();
-      });
-      div.appendChild(span);
-      tags.appendChild(div);
-      tags.style.display = 'flex';
-      searchByTagListAndKey();
-      result.style.display = 'block'; // display searching result
-      recipesBlock.style.display = 'none'; // hide block that include all recipes
-    });
-  }
-  removeNotMatchedTagUstensil();
+  removeNotMatchedTags(`${field}`);
 }
 
 /**
@@ -355,14 +220,13 @@ async function searchPrincipal() {
     recipes.forEach((recipe) => {
       search(recipe);
     });
-    removeSameResult();
     result.style.display = 'block'; // display searching result
     recipesBlock.style.display = 'none'; // hide block that include all recipes
     noResult(); // display message no result
     displayTags();
-    searchByIngredientTags();
-    searchByAppareilTags();
-    searchByUstensilTags();
+    searchByTags(ingredientsStr);
+    searchByTags(appareilsStr);
+    searchByTags(ustensilsStr);
   } else {
     result.style.display = 'none';
     recipesBlock.style.display = 'grid';
