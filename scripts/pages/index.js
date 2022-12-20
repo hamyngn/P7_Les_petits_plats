@@ -100,29 +100,6 @@ function noResult() {
   }
 }
 
-/**
- * remove same recipes search result when search by tags
- */
-function removeSameResult() {
-  if (searchResult.hasChildNodes()) {
-    const articles = searchResult.querySelectorAll('article');
-    const articlesArr = [];
-    for (let j = 0; j < articles.length; j += 1) {
-      articlesArr.push(articles[j].querySelector('h1').innerHTML);
-    }
-    const uniqueArticles = [];
-    for (let k = 0; k < articlesArr.length; k += 1) {
-      if (!uniqueArticles.includes(articlesArr[k])) {
-        uniqueArticles.push(articlesArr[k]);
-      } else {
-        articles[k].remove();
-      }
-    }
-  } else {
-    noResult();
-  }
-}
-
 const modalBackground = document.querySelector('.bground');
 /**
  * open tags modal
@@ -171,7 +148,7 @@ async function searchByTagListAndKey() {
   for (let k = 0; k < recipes.length; k += 1) {
     advancedSearchTagsAndKey(recipes[k]);
   }
-  removeSameResult();
+  noResult();
 }
 
 /**
@@ -243,7 +220,6 @@ async function searchPrincipal() {
     for (let k = 0; k < recipes.length; k += 1) {
       search(recipes[k]);
     }
-    removeSameResult();
     result.style.display = 'block'; // display searching result
     recipesBlock.style.display = 'none'; // hide block that include all recipes
     noResult(); // display message no result

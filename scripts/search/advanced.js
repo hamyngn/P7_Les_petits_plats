@@ -18,8 +18,10 @@ function checker(arr, target) {
 }
 
 /**
-    * search by tags
-    */
+ * search by tags
+ * @param {object} data
+ * @returns div
+ */
 function advancedSearchTags(data) {
   const {
     ingredients, appliance, ustensils,
@@ -58,6 +60,11 @@ function advancedSearchTags(data) {
   }
   return div;
 }
+
+/**
+ * search by tags and keyword
+ * @param {object} data
+ */
 
 function advancedSearchTagsAndKey(data) {
   const {

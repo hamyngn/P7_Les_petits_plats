@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
    * add tags include keyword to advanced search
    * @param {Array} tags
@@ -15,8 +16,9 @@ function addTags(tags, field) {
 }
 
 /**
-   * get All Tags of a recipe
-   */
+ * get all tags of a recipe
+ * @param {object} data
+ */
 function getTags(data) {
   const {
     ingredients, appliance, ustensils,
