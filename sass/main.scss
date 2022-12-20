@@ -200,11 +200,14 @@ div[clicked="clicked"] {
         align-items: center;
         justify-content: space-between;
         padding-bottom: 20px;
+
+        span {
+            width: 20%;
+            text-align: end;
+            font-weight: 700;
+        }
     }
-    span {
-        width: 20%;
-        text-align: end;
-    }
+    
     h1 {
         margin: 0;
         font-size: 18px;
@@ -212,6 +215,7 @@ div[clicked="clicked"] {
         height: 22px;
         width: 80%;
         overflow: hidden;
+        font-weight: 400;
     }
 
     // ingredients and description element
@@ -230,6 +234,9 @@ div[clicked="clicked"] {
     .description {
         flex: 1;
         margin: 0;
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
         font-size: 12px;
         line-height: 12px;
         max-height: 72px;
@@ -276,12 +283,20 @@ li span {
     margin-top: 25px;
     flex-wrap: nowrap;
     .tag {
-        background-color: $primary-color;
         border-radius: 5px;
         height: 37px;
         color: #FFFFFF;
         padding: 10px 20px;
         margin-right: 20px;
+    }
+    .ingredient-tag {
+        background-color: $primary-color;
+    }
+    .appareil-tag {
+        background-color: $secondary-color ;
+    }
+    .ustensil-tag {
+        background-color: $tertiary-color;
     }
     span {
         margin-left: 13px;

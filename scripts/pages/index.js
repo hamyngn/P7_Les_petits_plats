@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-console */
-/* global recipeFactory */
+/* global getRecipeDOM, search, getTags, advancedSearchTagsAndKey */
 
 /**
  *
@@ -20,10 +20,8 @@ async function getRecipes() {
  */
 async function displayRecipes(recipes) {
   const recipesSection = document.querySelector('.recipes');
-
   recipes.forEach((recipe) => {
-    const recipeModel = recipeFactory(recipe);
-    const recipeDOM = recipeModel.getRecipeDOM();
+    const recipeDOM = getRecipeDOM(recipe);
     recipesSection.appendChild(recipeDOM);
   });
 }
@@ -34,8 +32,7 @@ async function displayRecipes(recipes) {
  */
 async function displayAllTags(recipes) {
   recipes.forEach((recipe) => {
-    const recipeModel = recipeFactory(recipe);
-    recipeModel.getTags();
+    getTags(recipe);
   });
   displayTags();
   searchByIngredientTags();
@@ -110,19 +107,17 @@ function removeSameResult() {
   if (searchResult.hasChildNodes()) {
     const articles = searchResult.querySelectorAll('article');
     const articlesArr = [];
-    articles.forEach((article) => articlesArr.push(article.querySelector('h1').innerHTML));
+    for (let j = 0; j < articles.length; j += 1) {
+      articlesArr.push(articles[j].querySelector('h1').innerHTML);
+    }
     const uniqueArticles = [];
-    articlesArr.forEach((a) => {
-      if (!uniqueArticles.includes(a)) {
-        uniqueArticles.push(a);
+    for (let k = 0; k < articlesArr.length; k += 1) {
+      if (!uniqueArticles.includes(articlesArr[k])) {
+        uniqueArticles.push(articlesArr[k]);
       } else {
-        articles.forEach((article) => {
-          if (article === a) {
-            article.remove();
-          }
-        });
+        articles[k].remove();
       }
-    });
+    }
   } else {
     noResult();
   }
@@ -173,12 +168,11 @@ const recipesBlock = document.querySelector('.section--recipes');
 /**
  * update recipes search result when remove a tag
  */
-async function searchByTagList() {
+async function searchByTagListAndKey() {
   searchResult.replaceChildren();
   const { recipes } = await getRecipes();
   for (let k = 0; k < recipes.length; k += 1) {
-    const recipeModel = recipeFactory(recipes[k]);
-    recipeModel.advancedSearchTags();
+    advancedSearchTagsAndKey(recipes[k]);
   }
   removeSameResult();
 }
@@ -225,12 +219,12 @@ function searchByIngredientTags() {
       span.addEventListener('click', () => {
         div.remove();
         ingredientTags[i].style.pointerEvents = 'auto';
-        searchByTagList();
+        searchByTagListAndKey();
       });
       div.appendChild(span);
       tags.appendChild(div);
       tags.style.display = 'flex';
-      searchByTagList();
+      searchByTagListAndKey();
       const clickedTags = document.querySelectorAll('.tag');
       if (clickedTags.length === 1) {
         searchResult.replaceChildren();
@@ -283,16 +277,12 @@ function searchByAppareilTags() {
       span.addEventListener('click', () => {
         div.remove();
         appareilsTags[j].style.pointerEvents = 'auto';
-        searchByTagList();
+        searchByTagListAndKey();
       });
       div.appendChild(span);
       tags.appendChild(div);
       tags.style.display = 'flex';
-      searchByTagList();
-      const clickedTags = document.querySelectorAll('.tag');
-      if (clickedTags.length === 1) {
-        searchResult.replaceChildren();
-      }
+      searchByTagListAndKey();
       result.style.display = 'block'; // display searching result
       recipesBlock.style.display = 'none'; // hide block that include all recipes
     });
@@ -342,16 +332,12 @@ function searchByUstensilTags() {
       span.addEventListener('click', () => {
         div.remove();
         ustensilsTags[i].style.pointerEvents = 'auto';
-        searchByTagList();
+        searchByTagListAndKey();
       });
       div.appendChild(span);
       tags.appendChild(div);
       tags.style.display = 'flex';
-      searchByTagList();
-      const clickedTags = document.querySelectorAll('.tag');
-      if (clickedTags.length === 1) {
-        searchResult.replaceChildren();
-      }
+      searchByTagListAndKey();
       result.style.display = 'block'; // display searching result
       recipesBlock.style.display = 'none'; // hide block that include all recipes
     });
@@ -367,9 +353,7 @@ async function searchPrincipal() {
   const { recipes } = await getRecipes();
   if (keyword.length >= 3) {
     recipes.forEach((recipe) => {
-      const recipeModel = recipeFactory(recipe);
-      // function display recipes and tags that include keyword
-      recipeModel.search();
+      search(recipe);
     });
     removeSameResult();
     result.style.display = 'block'; // display searching result
