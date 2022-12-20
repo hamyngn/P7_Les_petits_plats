@@ -21,14 +21,14 @@ function search(data) {
     div.appendChild(recipeDOM);
     getTags(data);
   }
-  ingredients.forEach((i) => {
+  for (let i = 0; i < ingredients.length; i += 1) {
     if (!name.toString().match(reKey)
-      && !description.toString().match(reKey)
-      && i.ingredient.toString().match(reKey)) {
+    && !description.toString().match(reKey)
+    && ingredients[i].toString().match(reKey)) {
       const recipeDOM = getRecipeDOM(data);
       div.appendChild(recipeDOM);
       getTags(data);
     }
-  });
+  }
   return div;
 }

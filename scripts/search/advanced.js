@@ -25,9 +25,9 @@ function advancedSearchTags(data) {
     ingredients, appliance, ustensils,
   } = data;
 
-  const ingredientTags = document.querySelectorAll('.ingredient-tag');
-  const appareilTags = document.querySelectorAll('.appareil-tag');
-  const ustensilTags = document.querySelectorAll('.ustensil-tag');
+  const ingredientTags = document.querySelectorAll('.ingredients-tag');
+  const appareilTags = document.querySelectorAll('.appareils-tag');
+  const ustensilTags = document.querySelectorAll('.ustensils-tag');
   const div = document.querySelector('.search-result');
 
   const ingredientTagsArr = [];

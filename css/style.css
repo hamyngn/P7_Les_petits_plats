@@ -266,13 +266,13 @@ li span {
   padding: 10px 20px;
   margin-right: 20px;
 }
-.tags .ingredient-tag {
+.tags .ingredients-tag {
   background-color: #3282F7;
 }
-.tags .appareil-tag {
+.tags .appareils-tag {
   background-color: #68D9A4;
 }
-.tags .ustensil-tag {
+.tags .ustensils-tag {
   background-color: #ED6454;
 }
 .tags span {
