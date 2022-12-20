@@ -283,12 +283,20 @@ li span {
     margin-top: 25px;
     flex-wrap: nowrap;
     .tag {
-        background-color: $primary-color;
         border-radius: 5px;
         height: 37px;
         color: #FFFFFF;
         padding: 10px 20px;
         margin-right: 20px;
+    }
+    .ingredient-tag {
+        background-color: $primary-color;
+    }
+    .appareil-tag {
+        background-color: $secondary-color ;
+    }
+    .ustensil-tag {
+        background-color: $tertiary-color;
     }
     span {
         margin-left: 13px;

@@ -273,12 +273,20 @@ li span {
   flex-wrap: nowrap;
 }
 .tags .tag {
-  background-color: #3282F7;
   border-radius: 5px;
   height: 37px;
   color: #FFFFFF;
   padding: 10px 20px;
   margin-right: 20px;
+}
+.tags .ingredient-tag {
+  background-color: #3282F7;
+}
+.tags .appareil-tag {
+  background-color: #68D9A4;
+}
+.tags .ustensil-tag {
+  background-color: #ED6454;
 }
 .tags span {
   margin-left: 13px;
