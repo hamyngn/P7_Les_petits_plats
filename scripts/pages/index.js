@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
@@ -35,9 +36,6 @@ async function displayAllTags(recipes) {
     getTags(recipe);
   });
   displayTags();
-  searchByTags(ingredientsStr);
-  searchByTags(appareilsStr);
-  searchByTags(ustensilsStr);
 }
 
 /**
@@ -144,6 +142,7 @@ const recipesBlock = document.querySelector('.section--recipes');
  */
 async function searchByTagListAndKey() {
   searchResult.replaceChildren();
+  clearTags();
   const { recipes } = await getRecipes();
   for (let k = 0; k < recipes.length; k += 1) {
     advancedSearchTagsAndKey(recipes[k]);
@@ -175,42 +174,6 @@ function removeNotMatchedTags(field) {
 }
 
 /**
- * add onlick event to tags and remove tags that do not match input keyword
- */
-function searchByTags(field) {
-  const fieldTags = document.querySelectorAll(`.modal-${field} .${field}`);
-  const tags = document.querySelector('.tags');
-  // add onlick event to ingredient tags
-  for (let i = 0; i < fieldTags.length; i += 1) {
-    fieldTags[i].addEventListener('click', () => {
-      fieldTags[i].setAttribute('clicked', 'clicked');
-      fieldTags[i].style.pointerEvents = 'none';
-      const div = document.createElement('div');
-      div.setAttribute('class', `tag ${field}-tag`);
-      div.innerHTML = fieldTags[i].innerHTML;
-      const span = document.createElement('span');
-      span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
-      span.addEventListener('click', () => {
-        div.remove();
-        fieldTags[i].style.pointerEvents = 'auto';
-        searchByTagListAndKey();
-      });
-      div.appendChild(span);
-      tags.appendChild(div);
-      tags.style.display = 'flex';
-      searchByTagListAndKey();
-      const clickedTags = document.querySelectorAll('.tag');
-      if (clickedTags.length === 1) {
-        searchResult.replaceChildren();
-      }
-      result.style.display = 'block'; // display searching result
-      recipesBlock.style.display = 'none'; // hide block that include all recipes
-    });
-  }
-  removeNotMatchedTags(`${field}`);
-}
-
-/**
  * display search result
  */
 async function searchPrincipal() {
@@ -224,9 +187,6 @@ async function searchPrincipal() {
     recipesBlock.style.display = 'none'; // hide block that include all recipes
     noResult(); // display message no result
     displayTags();
-    searchByTags(ingredientsStr);
-    searchByTags(appareilsStr);
-    searchByTags(ustensilsStr);
   } else {
     result.style.display = 'none';
     recipesBlock.style.display = 'grid';
@@ -246,7 +206,6 @@ function clearTags() {
   modalAppareils.replaceChildren();
   modalUstensils.replaceChildren();
 }
-
 const tagsDiv = document.querySelector('.tags');
 const searchbar = document.querySelector('.search-bar');
 searchbar.addEventListener('input', () => {
