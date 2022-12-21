@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* global getRecipeDOM, getTags, displayTags */
+/* global getRecipeDOM, getTags, displayTags, disableClick */
 
 /**
    *
@@ -59,6 +59,7 @@ function advancedSearchTags(data) {
     div.appendChild(recipeDOM);
     getTags(data);
     displayTags();
+    disableClick();
   }
   return div;
 }

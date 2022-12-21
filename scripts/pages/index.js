@@ -155,14 +155,15 @@ async function searchByTagListAndKey() {
  */
 function removeNotMatchedTags(field) {
   const fieldTags = document.querySelectorAll(`.modal-${field} .${field}`);
-  const inputIngredients = document.querySelector(`.input-${field}`);
-  inputIngredients.addEventListener('input', () => {
+  const input = document.querySelector(`.input-${field}`);
+  input.addEventListener('input', () => {
+    hideModal(ingredientsStr);
     hideModal(appareilsStr);
     hideModal(ustensilsStr);
-    showModal(ingredientsStr);
-    const inputKeyword = inputIngredients.value;
+    showModal(field);
+    const inputKeyword = input.value;
     const exInput = new RegExp(inputKeyword, 'gi');
-    fieldTags.forEach((ingredientTag) => ingredientTag.style.display = 'block');
+    fieldTags.forEach((tag) => tag.style.display = 'block');
     if (inputKeyword !== '') {
       for (let i = 0; i < fieldTags.length; i += 1) {
         if (!fieldTags[i].innerHTML.match(exInput)) {
@@ -179,21 +180,30 @@ function removeNotMatchedTags(field) {
 async function searchPrincipal() {
   const keyword = document.querySelector('.search-bar').value;
   const { recipes } = await getRecipes();
-  if (keyword.length >= 3) {
+  if (!tagsDiv.hasChildNodes()) {
+    if (keyword.length >= 3) {
+      recipes.forEach((recipe) => {
+        search(recipe);
+      });
+      displayTags();
+      result.style.display = 'block'; // display searching result
+      recipesBlock.style.display = 'none'; // hide block that include all recipes
+      noResult(); // display message no result
+    } else {
+      result.style.display = 'none';
+      recipesBlock.style.display = 'grid';
+      init();
+    }
+  }
+  if (tagsDiv.hasChildNodes()) {
+    result.style.display = 'block';
+    recipesBlock.style.display = 'none';
     recipes.forEach((recipe) => {
-      search(recipe);
+      advancedSearchTagsAndKey(recipe);
     });
-    result.style.display = 'block'; // display searching result
-    recipesBlock.style.display = 'none'; // hide block that include all recipes
-    noResult(); // display message no result
-    displayTags();
-  } else {
-    result.style.display = 'none';
-    recipesBlock.style.display = 'grid';
-    init();
+    noResult();
   }
 }
-
 const modalIngredients = document.querySelector('.modal-ingredients');
 const modalAppareils = document.querySelector('.modal-appareils');
 const modalUstensils = document.querySelector('.modal-ustensils');
@@ -210,7 +220,6 @@ const tagsDiv = document.querySelector('.tags');
 const searchbar = document.querySelector('.search-bar');
 searchbar.addEventListener('input', () => {
   clearTags();
-  tagsDiv.replaceChildren();
   searchResult.replaceChildren();
   searchPrincipal();
 });
