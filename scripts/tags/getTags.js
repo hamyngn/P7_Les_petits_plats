@@ -1,5 +1,21 @@
 /* eslint-disable no-unused-vars */
-/* global searchByTagListAndKey, removeNotMatchedTags, result, recipesBlock, searchResult */
+/* global searchByTagListAndKey, removeNotMatchedTags, searchResult,
+result, recipesBlock, tagsDiv */
+
+function disableClick() {
+  if (tagsDiv.hasChildNodes()) {
+    const tags = tagsDiv.querySelectorAll('.tag');
+    const tagsSuggestion = document.querySelectorAll('.tag-suggestion');
+    for (let i = 0; i < tags.length; i += 1) {
+      for (let j = 0; j < tagsSuggestion.length; j += 1) {
+        if (tags[i].textContent === tagsSuggestion[j].textContent) {
+          tagsSuggestion[j].style.pointerEvents = 'none';
+        }
+      }
+    }
+  }
+}
+
 /**
    * add tags include keyword to advanced search
    * @param {Array} tags
@@ -8,14 +24,13 @@
 function addTags(tags, field) {
   const modal = document.querySelector(`.modal-${field}`);
   const tagsDiv = document.querySelector('.tags');
-  for (let k = 0; k < tags.length; k += 1) {
+  tags.forEach((tag) => {
     const keySuggest = document.createElement('div');
-    keySuggest.setAttribute('class', field);
-    keySuggest.innerHTML = tags[k];
+    keySuggest.setAttribute('class', `${field} tag-suggestion`);
+    keySuggest.innerHTML = tag;
     modal.appendChild(keySuggest);
     keySuggest.addEventListener('click', () => {
       keySuggest.setAttribute('clicked', 'clicked');
-      keySuggest.style.pointerEvents = 'none';
       const div = document.createElement('div');
       div.setAttribute('class', `tag ${field}-tag`);
       div.innerHTML = keySuggest.innerHTML;
@@ -23,7 +38,6 @@ function addTags(tags, field) {
       span.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
       span.addEventListener('click', () => {
         div.remove();
-        keySuggest.style.pointerEvents = 'auto';
         searchByTagListAndKey();
       });
       div.appendChild(span);
@@ -37,7 +51,7 @@ function addTags(tags, field) {
       result.style.display = 'block'; // display searching result
       recipesBlock.style.display = 'none'; // hide block that include all recipes
     });
-  }
+  });
   return modal;
 }
 

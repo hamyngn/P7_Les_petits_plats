@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* global getRecipeDOM, getTags, displayTags */
+/* global getRecipeDOM, getTags, displayTags, disableClick */
 
 /**
    *
@@ -20,7 +20,7 @@ function checker(arr, target) {
 /**
  * search by tags
  * @param {object} data
- * @returns div
+ * @returns div element
  */
 function advancedSearchTags(data) {
   const {
@@ -53,12 +53,13 @@ function advancedSearchTags(data) {
   const ustensilArr = [];
   ustensils.forEach((u) => ustensilArr.push(u));
   if (checker(ingredientsArr, ingredientTagsArr)
-            && checker(ustensilArr, ustensilTagsArr)
-            && checker(appareilArr, appareilTagsArr)) {
+              && checker(ustensilArr, ustensilTagsArr)
+              && checker(appareilArr, appareilTagsArr)) {
     const recipeDOM = getRecipeDOM(data);
     div.appendChild(recipeDOM);
     getTags(data);
     displayTags();
+    disableClick();
   }
   return div;
 }
@@ -67,7 +68,6 @@ function advancedSearchTags(data) {
  * search by tags and keyword
  * @param {object} data
  */
-
 function advancedSearchTagsAndKey(data) {
   const {
     name, description, ingredients,
@@ -83,8 +83,8 @@ function advancedSearchTagsAndKey(data) {
     }
     ingredients.forEach((i) => {
       if (!name.toString().match(reKey)
-      && !description.toString().match(reKey)
-      && i.ingredient.toString().match(reKey)) {
+        && !description.toString().match(reKey)
+        && i.ingredient.toString().match(reKey)) {
         advancedSearchTags(data);
       }
     });
