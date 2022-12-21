@@ -57,6 +57,7 @@ function advancedSearchTags(data) {
               && checker(appareilArr, appareilTagsArr)) {
     const recipeDOM = getRecipeDOM(data);
     div.appendChild(recipeDOM);
+    getTags();
   }
   return div;
 }
