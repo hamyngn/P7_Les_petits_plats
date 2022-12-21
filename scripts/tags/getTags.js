@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* global searchByTagListAndKey, removeNotMatchedTags */
+/* global searchByTagListAndKey, removeNotMatchedTags, result, recipesBlock, searchResult */
 /**
    * add tags include keyword to advanced search
    * @param {Array} tags
