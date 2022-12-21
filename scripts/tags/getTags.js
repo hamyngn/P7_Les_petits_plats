@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* global searchByTagListAndKey, removeNotMatchedTags */
+/* global searchByTagListAndKey, removeNotMatchedTags, searchResult, result, recipesBlock */
 /**
    * add tags include keyword to advanced search
    * @param {Array} tags
@@ -8,10 +8,10 @@
 function addTags(tags, field) {
   const modal = document.querySelector(`.modal-${field}`);
   const tagsDiv = document.querySelector('.tags');
-  for (let k = 0; k < tags.length; k += 1) {
+  tags.forEach((tag) => {
     const keySuggest = document.createElement('div');
     keySuggest.setAttribute('class', field);
-    keySuggest.innerHTML = tags[k];
+    keySuggest.innerHTML = tag;
     modal.appendChild(keySuggest);
     keySuggest.addEventListener('click', () => {
       keySuggest.setAttribute('clicked', 'clicked');
@@ -37,7 +37,7 @@ function addTags(tags, field) {
       result.style.display = 'block'; // display searching result
       recipesBlock.style.display = 'none'; // hide block that include all recipes
     });
-  }
+  });
   return modal;
 }
 
